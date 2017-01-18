@@ -23,8 +23,9 @@ class Game:
         self.font_menu = pygame.font.Font(None, 48)
 
         # Setting up buttons in main menu
-        self.myButton1 = Button((self.width*0.01), (self.height*0.25), "Button_unpressed.png", "Button_pressed.png")
-        self.myButton2 = Button((self.width*0.01), (self.height*0.75), "Button_unpressed.png", "Button_pressed.png")
+        buttonsize = (int(600/(self.width/150)), int(300/(self.height/150)))
+        self.myButton1 = Button((self.width*0.5), (self.height*0.25), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Visible")
+        self.myButton2 = Button((self.width*0.5), (self.height*0.50), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Exit")
 
     def draw(self):
         # Setting the framerate
@@ -61,7 +62,7 @@ class Game:
                 self.myButton2.handleEvent(event)
             self.draw()
 
-    def process_events():
+    def process_events(self):
         game = Game()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -72,12 +73,12 @@ class Game:
         return False
 
 class Button(object):
-    def __init__(self, x, y, image_request, down, rect=None, highlight=None):
-        self.pos = (x,y)
-        self.image = pygame.image.load(image_request).convert()
+    def __init__(self, x, y, image_request, down, screensize, type, rect=None, highlight=None):
+        self.size = screensize
+        self.type = type
 
         if rect is None:
-            self._rect = pygame.Rect(x-30, y-30, 0, 0)
+            self._rect = pygame.Rect(x, y, 0, 0)
         else:
             self._rect = pygame.Rect(None)
 
@@ -107,19 +108,20 @@ class Button(object):
             highlightSurface = normalSurface
 
         # Setting up the textures of the button
-        if type(normalSurface) == str:
-            self.origSurfaceNormal = pygame.image.load(normalSurface)
-        if type(downSurface) == str:
-            self.origSurfaceDown = pygame.image.load(downSurface)
-        if type(highlightSurface) == str:
-            self.origSurfaceHighlight = pygame.image.load(highlightSurface)
+        if self._visible:
+            if type(normalSurface) == str:
+                self.origSurfaceNormal = pygame.image.load(normalSurface)
+            if type(downSurface) == str:
+                self.origSurfaceDown = pygame.image.load(downSurface)
+            if type(highlightSurface) == str:
+                self.origSurfaceHighlight = pygame.image.load(highlightSurface)
 
         if self.origSurfaceNormal.get_size() != self.origSurfaceDown.get_size() != self.origSurfaceHighlight.get_size():
             raise Exception('foo')
 
-        self.surfaceNormal = self.origSurfaceNormal
-        self.surfaceDown = self.origSurfaceDown
-        self.surfaceHighlight = self.origSurfaceHighlight
+        self.surfaceNormal = pygame.transform.scale(self.origSurfaceNormal, self.size)
+        self.surfaceDown = pygame.transform.scale(self.origSurfaceDown, self.size)
+        self.surfaceHighlight = pygame.transform.scale(self.origSurfaceHighlight, self.size)
         self.customSurfaces = True
         self._rect = pygame.Rect((self._rect.left, self._rect.top, self.surfaceNormal.get_width(), self.surfaceNormal.get_height()))
 
@@ -136,9 +138,9 @@ class Button(object):
     def update(self):
         """Redraw the button's Surface object. Call this method when the button has changed appearance."""
         if self.customSurfaces:
-            self.surfaceNormal    = pygame.transform.smoothscale(self.origSurfaceNormal, self._rect.size)
-            self.surfaceDown      = pygame.transform.smoothscale(self.origSurfaceDown, self._rect.size)
-            self.surfaceHighlight = pygame.transform.smoothscale(self.origSurfaceHighlight, self._rect.size)
+            self.surfaceNormal    = pygame.transform.smoothscale(self.origSurfaceNormal, self.size)
+            self.surfaceDown      = pygame.transform.smoothscale(self.origSurfaceDown, self.size)
+            self.surfaceHighlight = pygame.transform.smoothscale(self.origSurfaceHighlight, self.size)
             return
 
     def mouseClick(self, event):
@@ -153,6 +155,9 @@ class Button(object):
         pass # This class is meant to be overridden.
     def mouseUp(self, event):
         pass # This class is meant to be overridden.
+
+    def _propSetVisible(self, setting):
+        self._visible = setting
 
     def handleEvent(self, eventObj):
         if eventObj.type not in (MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN) or not self._visible:
@@ -194,7 +199,19 @@ class Button(object):
                 doMouseClick = True
             self.lastMouseDownOverButton = False
 
-            if self.buttonDown:
+            if self.buttonDown and self.type == "Exit":
+                self.buttonDown = False
+                self.mouseUp(eventObj)
+                retVal.append('up')
+                sys.exit()
+
+            elif self.buttonDown and self.type == "Visible":
+                self.buttonDown = False
+                self.mouseUp(eventObj)
+                retVal.append('up')
+                self._propSetVisible(False)
+
+            elif self.buttonDown:
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
@@ -210,14 +227,12 @@ class Button(object):
 
         return retVal
 
-def process_events():
-    game = Game()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            # Give the signal to quit
-            return True
-        game.myButton.handleEvent(event)
-    return False
+# def process_events():
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             # Give the signal to quit
+#             return True
+#     return False
 
 def program():
     game = Game()
