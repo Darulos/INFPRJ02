@@ -1,0 +1,7 @@
+create table vragen(
+	vraagnummer integer primary key,
+	vraagsoort varchar(2),
+	vraag varchar(250),
+	mogelijkheden varchar(250),
+	antwoord varchar(250)
+);
