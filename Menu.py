@@ -1,6 +1,7 @@
 import os, sys, pygame
 from pygame.locals import *
 
+
 import Variables
 
 class Game():
