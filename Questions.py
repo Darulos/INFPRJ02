@@ -34,7 +34,7 @@ def pick_number(type):
         QuestionID = random.randint(1, 119)
     return QuestionID
 
-
+# je snapt wel hoe dit werkt toch
 def question(number):
     return interact_database("SELECT Question FROM Questions WHERE Question_ID = %s", (number,))[0][0]
 

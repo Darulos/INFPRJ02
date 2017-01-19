@@ -11,7 +11,7 @@ class Game:
         height = 480
         size = (width, height)
 
-        # Start PyGame
+        # Start PyGame op
         pygame.init()
 
         # Set the resolution
