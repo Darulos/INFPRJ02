@@ -12,6 +12,7 @@ def process_events():
 #main program logic
 def program():
 
+    #screen dimensions
     width = 480
     height = 620
     size = (width, height)
@@ -22,16 +23,11 @@ def program():
     # Set the resolution
     screen = pygame.display.set_mode(size)
 
-    # Create the players
-
     while not process_events():
-       #UPDATE HERE
         # Clear the screen
         screen.fill((0, 0, 0))
 
-        #draw box
-
-        #draw text
+        #draw spelregels text
         textheight = 20
         font = pygame.font.Font(None, 25)
         text = font.render("SPELREGELS", True, (255, 255, 255))
@@ -219,9 +215,6 @@ def program():
         text = font.render("Wanneer je als eerste de top haalt, ben je de winnaar van het spel!", True, (255, 255, 255))
         text_rect = text.get_rect(center=(width/2, textheight))
         screen.blit(text, text_rect)
-
-
-
 
         #flip screen
         pygame.display.flip()
