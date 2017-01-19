@@ -43,9 +43,13 @@ def possibilities(number):
     return interact_database("SELECT Possibilities FROM Questions WHERE Question_ID = %s", (number,))[0][0]
 
 
+def answers(number):
+    return interact_database("SELECT Answers FROM Questions WHERE Question_ID = %s", (number,))[0][0]
+
 num = pick_number('d')
 print(num)
 print(question(num))
 print(possibilities(num))
+print(answers(num))
 
 # Copyright 2017 Sjors van Gelderen
