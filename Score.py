@@ -3,7 +3,7 @@ import psycopg2
 
 def interact_database(command, upload, params=None):
     # Voer achter user uw postgres inlognaam in, voer achter password uw postgres password in.
-    connection = psycopg2.connect("dbname=INF1H_Project_2_Group_4 user=postgres password=INF1HGroup4")
+    connection = psycopg2.connect("dbname=INF1H_Project_2_Group_4 user=postgres password=M1ho1337@lice")
     cursor = connection.cursor()
 
     cursor.execute(command, params)
