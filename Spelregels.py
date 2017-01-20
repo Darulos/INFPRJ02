@@ -4,7 +4,7 @@ import pygame
 class Info:
     def draw(self, surface):
         if Variables.visibility_text:
-            #draw spelregels text
+            # Draw spelregels text
 
             textheight = 20
             font_max = pygame.font.Font(None, 25)

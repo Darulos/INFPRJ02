@@ -1,6 +1,6 @@
 import random
 import psycopg2
-import Number
+import Variables
 
 
 def interact_database(command, params=None):
@@ -50,7 +50,7 @@ def answers(number):
 
 def begin():
     num = random.randint(1, 119)
-    Number.a = num
+    Variables.questionint = num
     print(question(num))
     print(possibilities(num))
 

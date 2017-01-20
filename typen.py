@@ -22,15 +22,19 @@ def typen():
                 # zet de aangetikte letter/hoofdletter in antwoord
                 if event.unicode.isalpha():
                     antwoord += event.unicode
+
                 # zet de aangetikte cijfer in antwoord
                 elif event.unicode.isdigit():
                     antwoord += event.unicode
+
                 # zet de aangetikte spatie in antwoord
                 elif event.key == pygame.K_SPACE:
                     antwoord += " "
+
                 # maakt antwoord 1 lengte korter wanneer backspace wordt aangetikt
                 elif event.key == pygame.K_BACKSPACE:
                     antwoord = antwoord[:-1]
+
                 # checkt gegeven antwoord met het answer in de database en haalt antwoord leeg
                 elif event.key == pygame.K_RETURN:
                     # if antwoord in answer, display correct, score +=
@@ -47,6 +51,7 @@ def typen():
                         print(Score.download_score())
                         print(Score.download_highscore())
                         loop = False
+
             elif event.type is pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -54,7 +59,7 @@ def typen():
         score_display = Score.download_highscore()
         score_block = font.render("score: {}".format(score_display), 1, (255, 255, 255))
         block = font.render(antwoord, 1, (255, 255, 255))
-        rect = block.get_rect(center=(240, 310))
+        rect = block.get_rect(center=(Variables.game.width/2, Variables.game.height/2))
         Variables.game.screen.blit(block, rect)
         Variables.game.screen.blit(score_block, (16, 16))
         pygame.display.flip()

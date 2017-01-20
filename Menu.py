@@ -13,8 +13,8 @@ class Game():
         self.image = None
 
         # Stating the size of the screen
-        self.width = 480
-        self.height = 640
+        self.width = 1280
+        self.height = 720
         size = (self.width, self.height)
 
         # Start Pygame
@@ -25,14 +25,16 @@ class Game():
         pygame.display.set_caption('Euromast')
 
         # Setting up the menu text on top
-        self.Menu_text = Text(True, "Menu",(255, 255, 255), self.width/2, self.height*0.10)
+        self.Menu_text = Text(True, "Euromast",(255, 255, 255), self.width/2, self.height*0.10)
 
         # Setting up buttons in main menu
-        buttonsize = (int(600/(self.width/150)), int(300/(self.height/150)))
-        self.Menu_button0 = Button((self.width*0.5), (self.height*0.30), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Play", True)
-        self.Menu_button1 = Button((self.width*0.5), (self.height*0.45), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Visible", True)
-        self.Menu_button2 = Button((self.width*0.5), (self.height*0.60), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Exit", True)
-        self.Menu_button3 = Button((self.width*0.5), (self.height*0.85), "Button_unpressed.png", "Button_pressed.png", buttonsize, "VisibleExit", False)
+        button_width = 150
+        button_height = 75
+        buttonsize = (int(button_width), int(button_height))
+        self.Menu_button0 = Button((self.width*0.5-(button_width/2)), (self.height*0.30), "Button_unpressed.png", "Button_pressed.png", "Button_highlight.png", buttonsize, "Play", True)
+        self.Menu_button1 = Button((self.width*0.5-(button_width/2)), (self.height*0.45), "Button_unpressed.png", "Button_pressed.png", "Button_highlight.png", buttonsize, "Visible", True)
+        self.Menu_button2 = Button((self.width*0.5-(button_width/2)), (self.height*0.60), "Button_unpressed.png", "Button_pressed.png", "Button_highlight.png", buttonsize, "Exit", True)
+        self.Menu_button3 = Button((self.width*0.5-(button_width/2)), (self.height*0.85), "Button_unpressed.png", "Button_pressed.png", "Button_highlight.png", buttonsize, "VisibleExit", False)
 
         # Setting up the information regarding the game
         self.Text = Spelregels.Info()
@@ -68,7 +70,7 @@ class Game():
             self.switch()
             self.screen.fill((0, 0, 0))
             self.Menu_button3.update()
-            self.Menu_button3.setSurfaces("Button_unpressed.png", "Button_pressed.png")
+            self.Menu_button3.setSurfaces("Button_unpressed.png", "Button_pressed.png", "Button_highlight.png")
             self.Menu_button3.draw(self.screen)
             self.Menu_text.update()
 
@@ -138,7 +140,7 @@ class Text:
 
 
 class Button(object):
-    def __init__(self, x, y, image_request, down, screensize, type, check, rect=None, highlight=None):
+    def __init__(self, x, y, image_request, down, highlight, screensize, type, check):
         self.size = screensize
         self.type = type
         self._rect = pygame.Rect(x, y, 0, 0)
