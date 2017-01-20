@@ -3,6 +3,8 @@ from pygame.locals import *
 
 
 import Variables
+import Spelregels
+import typen
 
 class Game():
     def __init__(self):
@@ -22,17 +24,18 @@ class Game():
         # Setting the name of the window
         pygame.display.set_caption('Euromast')
 
-        # Setting up the the font
-        self.font_menu = pygame.font.Font(None, 48)
+        # Setting up the menu text on top
+        self.Menu_text = Text(True, "Menu",(255, 255, 255), self.width/2, self.height*0.10)
 
         # Setting up buttons in main menu
         buttonsize = (int(600/(self.width/150)), int(300/(self.height/150)))
-        self.Menu_button1 = Button((self.width*0.5), (self.height*0.25), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Visible", True)
-        self.Menu_button2 = Button((self.width*0.5), (self.height*0.50), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Exit", True)
+        self.Menu_button0 = Button((self.width*0.5), (self.height*0.30), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Play", True)
+        self.Menu_button1 = Button((self.width*0.5), (self.height*0.45), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Visible", True)
+        self.Menu_button2 = Button((self.width*0.5), (self.height*0.60), "Button_unpressed.png", "Button_pressed.png", buttonsize, "Exit", True)
         self.Menu_button3 = Button((self.width*0.5), (self.height*0.85), "Button_unpressed.png", "Button_pressed.png", buttonsize, "VisibleExit", False)
 
         # Setting up the information regarding the game
-        self.Text = Info()
+        self.Text = Spelregels.Info()
 
     def draw(self):
         # Setting the framerate
@@ -43,11 +46,10 @@ class Game():
         self.screen.fill((0, 0, 0))
 
         # Set the menu text on top
-        score_text = self.font_menu.render("Menu", 1, (255, 255, 255))
-        score_text_rect = score_text.get_rect(center=(self.width/2, self.height*0.10))
-        self.screen.blit(score_text, score_text_rect)
+        self.Menu_text.draw()
 
         # Add image of a button
+        self.Menu_button0.draw(self.screen)
         self.Menu_button1.draw(self.screen)
         self.Menu_button2.draw(self.screen)
         self.Menu_button3.draw(self.screen)
@@ -59,13 +61,30 @@ class Game():
         pygame.display.flip()
 
     def update(self):
-        self.Menu_button1.update()
-        self.Menu_button2.update()
-        self.switch()
-        self.screen.fill((0, 0, 0))
-        self.Menu_button3.update()
-        self.Menu_button3.setSurfaces("Button_unpressed.png", "Button_pressed.png")
-        self.Menu_button3.draw(self.screen)
+        if Variables.function == "Menu_info":
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.switch()
+            self.screen.fill((0, 0, 0))
+            self.Menu_button3.update()
+            self.Menu_button3.setSurfaces("Button_unpressed.png", "Button_pressed.png")
+            self.Menu_button3.draw(self.screen)
+            self.Menu_text.update()
+
+        if Variables.function == "Play":
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.Menu_text.update()
+            typen.start()
+
+        if Variables.function == "Menu_return":
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.Menu_text.update()
+            Variables.function = "Menu_info"
 
     def switch(self):
         Variables.visibility_text = not Variables.visibility_text
@@ -77,6 +96,7 @@ class Game():
                 if event.type == pygame.QUIT:
                     # Give the signal to quit
                     a = True
+                self.Menu_button0.eventhandler(event)
                 self.Menu_button1.eventhandler(event)
                 self.Menu_button2.eventhandler(event)
                 self.Menu_button3.eventhandler(event)
@@ -87,181 +107,34 @@ class Game():
             if event.type == pygame.QUIT:
                 # Give the signal to quit
                 return True
+            self.Menu_button0.eventhandler(event)
             self.Menu_button1.eventhandler(event)
             self.Menu_button2.eventhandler(event)
             self.Menu_button3.eventhandler(event)
         return False
 
-class Info:
-    def draw(self, surface):
-        if Variables.visibility_text:
-            #draw spelregels text
+class Text:
+    def __init__(self, check, text, color, width, height):
+        self._visible = check
+        self.font_menu = pygame.font.Font(None, 48)
+        self.text = text
+        self.color = color
+        self.width = width
+        self.height = height
 
-            textheight = 20
-            font_max = pygame.font.Font(None, 25)
-            font_mid = pygame.font.Font(None, 20)
-            font_mini = pygame.font.Font(None, 17)
+    def draw(self):
+        if self._visible:
+            score_text = self.font_menu.render(self.text, 1, self.color)
+            score_text_rect = score_text.get_rect(center=(self.width, self.height))
+            Variables.game.screen.blit(score_text, score_text_rect)
 
-            text = font_max.render("SPELREGELS", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
+    def update(self):
+        if Variables.init == 1:
+            if self._visible == False:
+                self._visible = True
 
-            textheight+=30
-
-            text = font_mid.render("Voor het spelen van het spel:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=21
-
-            text = font_mini.render("+ Het spel kan gespeeld worden met 1 tot 4 spelers.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Voor het beantwoorden van vragen krijgt de speler 50 seconden.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Ieder nummer op de dobbelsteen heeft zijn eigen soort vraag:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("            -- Cijfers 1, 3, en 5 zijn open vragen, 2, 4, en 6 zijn meerkeuzevragen", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Er zijn vier verschillende categorieen vragen, elk met een eigen kleur:)", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("    -- Blauw = Sport           -- Groen = Geografie", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("    -- Rood = Entertainment           -- Geel = Geschiedenis", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Elke speler krijgt een avatar toegewezen aan het begin van het spel.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Het spel bepaalt willekeurig welke speler mag beginnen.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ De spelers kiezen in de aangegeven volgorde hun startcategorie.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=25
-
-            text = font_mid.render("Tijdens het spel:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=21
-
-            text = font_mini.render("+ De speler kiest als eerste een richting (links, rechts, omhoog, omlaag).", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Het aantal stappen in deze richting wordt bepaalt met de dobbelsteen:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("    -- Cijfers 1 en 2 met de dobbelsteen: 1 stap in de gekozen richting.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("        -- Cijfers 3 en 4 met de dobbelsteen: 2 stappen in de gekozen richting.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("        -- Cijfers 5 en 6 met de dobbelsteen: 3 stappen in de gekozen richting.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Als twee spelers op dezelfde positie komen, moet de speler die er stond", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("een dobbelsteen gooien, en het bijbehorende aantal stappen omlaag gaan.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Als de speler een vraag goed beantwoordt:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("-- Het gerolde aantal stappen mag worden gelopen door de speler", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("+ Als de speler een vraag fout beantwoordt:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("-- De speler mag niet verplaatsen en zijn/haar beurt eindigt.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=18
-
-            text = font_mini.render("-- Als er geen antwoord binnen de tijd wordt gegeven geldt dit ook als fout.", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=21
-
-            text = font_mid.render("Hoe win je het spel:", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
-            textheight+=19
-
-            text = font_mini.render("Wanneer je als eerste de top haalt, ben je de winnaar van het spel!", True, (255, 255, 255))
-            text_rect = text.get_rect(center=(Variables.game.width/2, textheight))
-            surface.blit(text, text_rect)
-
+            elif self._visible == True:
+                self._visible = False
 
 
 class Button(object):
@@ -408,6 +281,14 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                Variables.function = "Menu_info"
+                self._propSetVisible()
+
+            elif self.buttonDown and self.type == "Play":
+                self.buttonDown = False
+                self.mouseUp(eventObj)
+                retVal.append('up')
+                Variables.function = "Play"
                 self._propSetVisible()
 
             elif self.buttonDown:

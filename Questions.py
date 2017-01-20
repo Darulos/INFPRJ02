@@ -4,7 +4,7 @@ import Number
 
 
 def interact_database(command, params=None):
-    connection = psycopg2.connect("dbname=INF1H_Project_2_Group_4 user=postgres password=INF1HGroup4")
+    connection = psycopg2.connect("dbname=INF1H_Project_2_Group_4 user=postgres password=M1ho1337@lice")
     cursor = connection.cursor()
     cursor.execute(command, params)
     connection.commit()
@@ -53,6 +53,5 @@ def begin():
     Number.a = num
     print(question(num))
     print(possibilities(num))
-    print(answers(num))
 
 # Copyright 2017 Sjors van Gelderen

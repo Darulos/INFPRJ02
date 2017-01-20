@@ -1,0 +1,12 @@
+CREATE TABLE Questions(
+	Question_ID integer PRIMARY KEY,
+	Type varchar(3),
+	Question varchar(200),
+	Possibilities varchar(200),
+	Answers varchar(200)
+);
+
+CREATE TABLE Score(
+	Name varchar(20) PRIMARY KEY,
+	Score integer
+);
