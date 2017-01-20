@@ -144,17 +144,17 @@ class Button(object):
         self._rect = pygame.Rect(x, y, 0, 0)
 
         # Tracks the state of the button
-        self.buttonDown = False # is the button currently pushed down?
-        self.mouseOverButton = False # is the mouse currently hovering over the button?
-        self.lastMouseDownOverButton = False # was the last mouse down event over the mouse button? (Used to track clicks.)
-        self._visible = check # is the button visible
-        self.customSurfaces = False # button starts as a text button instead of having custom images for each surface
+        self.buttonDown = False # Is the button currently pushed down?
+        self.mouseOverButton = False # Is the mouse currently hovering over the button?
+        self.lastMouseDownOverButton = False # Was the last mouse down event over the mouse button? (Used to track clicks.)
+        self._visible = check # Is the button visible
+        #self.customSurfaces = False # Button starts as a text button instead of having custom images for each surface
 
         # Create the surfaces for a text button
         self.surfaceNormal = pygame.Surface(self._rect.size)
         self.surfaceDown = pygame.Surface(self._rect.size)
         self.surfaceHighlight = pygame.Surface(self._rect.size)
-        self.update() # draw the initial button images
+        self.update() # Draw the initial button images
 
         # Calling the function
         self.setSurfaces(image_request, down, highlight)
@@ -184,7 +184,7 @@ class Button(object):
             self.surfaceNormal = pygame.transform.scale(self.origSurfaceNormal, self.size)
             self.surfaceDown = pygame.transform.scale(self.origSurfaceDown, self.size)
             self.surfaceHighlight = pygame.transform.scale(self.origSurfaceHighlight, self.size)
-            self.customSurfaces = True
+            #self.customSurfaces = True
             self._rect = pygame.Rect((self._rect.left, self._rect.top, self.surfaceNormal.get_width(), self.surfaceNormal.get_height()))
 
 
@@ -213,19 +213,21 @@ class Button(object):
         #     self.surfaceHighlight = pygame.transform.smoothscale(self.origSurfaceHighlight, self.size)
         #     return
 
+    # Classes meant to be overridden
     def mouseClick(self, event):
-        pass # This class is meant to be overridden.
+        pass
     def mouseEnter(self, event):
-        pass # This class is meant to be overridden.
+        pass
     def mouseMove(self, event):
-        pass # This class is meant to be overridden.
+        pass
     def mouseExit(self, event):
-        pass # This class is meant to be overridden.
+        pass
     def mouseDown(self, event):
-        pass # This class is meant to be overridden.
+        pass
     def mouseUp(self, event):
-        pass # This class is meant to be overridden.
+        pass
 
+    # Function to trigger update of buttons
     def _propSetVisible(self):
         Variables.init = 1
         Variables.game.update()
@@ -240,17 +242,17 @@ class Button(object):
 
         hasExited = False
         if not self.mouseOverButton and self._rect.collidepoint(eventObj.pos):
-            # if mouse has entered the button:
+            # If mouse has entered the button:
             self.mouseOverButton = True
             self.mouseEnter(eventObj)
             retVal.append('enter')
         elif self.mouseOverButton and not self._rect.collidepoint(eventObj.pos):
-            # if mouse has exited the button:
+            # If mouse has exited the button:
             self.mouseOverButton = False
-            hasExited = True # call mouseExit() later, since we want mouseMove() to be handled before mouseExit()
+            hasExited = True # Call mouseExit() later, since we want mouseMove() to be handled before mouseExit()
 
         if self._rect.collidepoint(eventObj.pos):
-            # if mouse event happened over the button:
+            # If mouse event happened over the button:
             if eventObj.type == MOUSEMOTION:
                 self.mouseMove(eventObj)
                 retVal.append('move')
@@ -261,10 +263,10 @@ class Button(object):
                 retVal.append('down')
         else:
             if eventObj.type in (MOUSEBUTTONUP, MOUSEBUTTONDOWN):
-                # if an up/down happens off the button, then the next up won't cause mouseClick()
+                # If an up/down happens off the button, then the next up won't cause mouseClick()
                 self.lastMouseDownOverButton = False
 
-        # mouse up is handled whether or not it was over the button
+        # Mouse up is handled whether or not it was over the button
         doMouseClick = False
         if eventObj.type == MOUSEBUTTONUP:
             if self.lastMouseDownOverButton:
@@ -306,13 +308,6 @@ class Button(object):
             retVal.append('exit')
 
         return retVal
-
-# def process_events():
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             # Give the signal to quit
-#             return True
-#     return False
 
 def program():
     Variables.game = Game()
