@@ -1,3 +1,4 @@
+import random
 import pygame
 
 
@@ -59,3 +60,87 @@ class board:
             #reset the value of the x axis so that the next row starts at same spot as the previous row
             x = 0
 
+
+
+#class to keep track of the different avatars and their positions
+#id dfferentiates between the different avatars and x,y are the coordinates
+class avatars:
+    def __init__(self, id, x, y):
+        self.id = id
+        self.x = x
+        self.y = y
+
+    #function to update the the position of a a player
+    def update(self):
+        #loops through the button presses to check what direction the player wants to go to
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                #checks if the left arrow key has been pressed and changes the x value to move the avatar
+                if event.key == pygame.K_LEFT:
+                    #throw dice
+                    if self.y < 240:
+                        self.x -= 96 * random.randint(1,3)
+                        #if the avatar is moved outside the bord it gets placed on the right of the board because its
+                        #supposed to be circular
+                        if self.x < 48 and self.y > 216:
+                            self.x += 384
+                        elif self.x < 24:
+                            self.x += 384
+                    else:
+                        self.x -= 48 * random.randint(1,3)#* dice throw
+                        #if the avatar is moved outside the bord it gets placed on the right of the board because its
+                        #supposed to be circular 48 144 240 336
+                        if self.x < 48 and self.y > 216:
+                            self.x += 384
+                        elif self.x < 24:
+                            self.x += 384
+                #checks if the right arrow key has been pressed and changes the x value to move the avatar
+                elif event.key == pygame.K_RIGHT:
+                    #throw dice
+                    if self.y < 240:
+                        self.x += 96 * random.randint(1,3)
+                        #if the avatar is moved outside the bord it gets placed on the left of the board because its
+                        #supposed to be circular
+                        if self.x > 336 and self.y > 216:
+                            self.x -= 384
+                        elif self.x > 360:
+                            self.x -= 384
+                    else:
+                        self.x += 48 * random.randint(1,3)#* dice throw
+                        #if the avatar is moved outside the bord it gets placed on the left of the board because its
+                        #supposed to be circular
+                        if self.x > 336 and self.y > 216:
+                            self.x -= 384
+                        elif self.x > 360:
+                            self.x -= 384
+                #checks if the up arrow key has been pressed and changes the y value to move the avatar
+                elif event.key == pygame.K_UP:
+                    #throw dice
+                    self.y -= 48 * random.randint(1,3)#* dice throw
+                    #if the avatar is moved above the board it gets placed on top of the board and the player wins
+                    if self.y < 24:
+                        self.y = 24
+                        #winnaar!!!!!!!
+                #checks if the down arrow key has been pressed and changes the y value to move the avatar
+                elif event.key == pygame.K_DOWN:
+                    #throw dice
+                    self.y += 48 * random.randint(1,3)#* dice throw
+                    #if the avatar is moved underneath the board it gets placed on at the bottom of the board
+                    if self.y > 696:
+                        self.y = 696
+
+    def draw(self, screen):
+        #load and draw the avatars(right now only 1 is drawn)
+        img=pygame.image.load("1.png")
+        screen.blit(img,(player1.x, player1.y))
+
+
+
+player1 = avatars(1, 240, 24)
+screen = pygame.display.set_mode((1280, 720))
+
+while True:
+    screen.fill((0,0,0))
+    player1.update()
+    player1.draw(screen)
+    pygame.display.flip()
