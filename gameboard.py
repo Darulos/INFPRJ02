@@ -14,7 +14,7 @@ class board:
             for j in range(8):
                 #the board is 15 high but is 8 wide untill it gets to the top 5 and since its drawn from top to bottom
                 # the first 5 rows are only 4 wide and need a special if
-                if i > 5:
+                if i > 4:
                     #draws a black square behind every coloured square to give it better contrast
                     pygame.draw.rect(screen, (0,0,0), (x, y, w, w))
                     #for loop that draws 42 lines in slighty darker colour to create a gradient square
@@ -79,52 +79,72 @@ class avatars:
                 if event.key == pygame.K_LEFT:
                     #throw dice
                     if self.y < 240:
-                        self.x -= 96 * random.randint(1,3)
+                        self.x -= 96 #* random.randint(1,3)
                         #if the avatar is moved outside the bord it gets placed on the right of the board because its
                         #supposed to be circular
-                        if self.x < 48 and self.y > 216:
-                            self.x += 384
-                        elif self.x < 24:
+                        if self.x < 24:
                             self.x += 384
                     else:
-                        self.x -= 48 * random.randint(1,3)#* dice throw
+                        self.x -= 48 #* random.randint(1,3)#* dice throw
                         #if the avatar is moved outside the bord it gets placed on the right of the board because its
                         #supposed to be circular 48 144 240 336
-                        if self.x < 48 and self.y > 216:
-                            self.x += 384
-                        elif self.x < 24:
+                        if self.x < 24:
                             self.x += 384
                 #checks if the right arrow key has been pressed and changes the x value to move the avatar
                 elif event.key == pygame.K_RIGHT:
                     #throw dice
                     if self.y < 240:
-                        self.x += 96 * random.randint(1,3)
+                        self.x += 96 #* random.randint(1,3)
                         #if the avatar is moved outside the bord it gets placed on the left of the board because its
                         #supposed to be circular
-                        if self.x > 336 and self.y > 216:
-                            self.x -= 384
-                        elif self.x > 360:
+                        if self.x > 360:
                             self.x -= 384
                     else:
-                        self.x += 48 * random.randint(1,3)#* dice throw
+                        self.x += 48 #* random.randint(1,3)#* dice throw
                         #if the avatar is moved outside the bord it gets placed on the left of the board because its
                         #supposed to be circular
-                        if self.x > 336 and self.y > 216:
-                            self.x -= 384
-                        elif self.x > 360:
+                        if self.x > 360:
                             self.x -= 384
                 #checks if the up arrow key has been pressed and changes the y value to move the avatar
                 elif event.key == pygame.K_UP:
+                    tempy = self.y
                     #throw dice
-                    self.y -= 48 * random.randint(1,3)#* dice throw
-                    #if the avatar is moved above the board it gets placed on top of the board and the player wins
+                    self.y -= 48 #* random.randint(1,3)#* dice throw
+                    if tempy > 216 and self.y <= 216:
+                        if self.x == 24:
+                            self.x += 24
+                        elif self.x == 72:
+                            self.x -= 24
+                        elif self.x == 120:
+                            self.x += 24
+                        elif self.x == 168:
+                            self.x -= 24
+                        elif self.x == 216:
+                            self.x += 24
+                        elif self.x == 264:
+                            self.x -= 24
+                        elif self.x == 312:
+                            self.x += 24
+                        elif self.x == 360:
+                            self.x -= 24
+                        #if the avatar is moved above the board it gets placed on top of the board and the player wins
                     if self.y < 24:
                         self.y = 24
                         #winnaar!!!!!!!
                 #checks if the down arrow key has been pressed and changes the y value to move the avatar
                 elif event.key == pygame.K_DOWN:
+                    tempy = self.y
                     #throw dice
-                    self.y += 48 * random.randint(1,3)#* dice throw
+                    self.y += 48 #* random.randint(1,3)#* dice throw
+                    if tempy <= 216 and self.y > 216:
+                        if self.x == 48:
+                            self.x += 24
+                        elif self.x == 144:
+                            self.x += 24
+                        elif self.x == 240:
+                            self.x += 24
+                        elif self.x == 336:
+                            self.x += 24
                     #if the avatar is moved underneath the board it gets placed on at the bottom of the board
                     if self.y > 696:
                         self.y = 696
@@ -132,15 +152,17 @@ class avatars:
     def draw(self, screen):
         #load and draw the avatars(right now only 1 is drawn)
         img=pygame.image.load("1.png")
-        screen.blit(img,(player1.x, player1.y))
+        rect = img.get_rect(center=(player1.x, player1.y))
+        screen.blit(img,rect)
 
 
 
-player1 = avatars(1, 240, 24)
+player1 = avatars(1, 48, 24)
 screen = pygame.display.set_mode((1280, 720))
 
 while True:
     screen.fill((0,0,0))
+    board.draw(screen)
     player1.update()
     player1.draw(screen)
     pygame.display.flip()
