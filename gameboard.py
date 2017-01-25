@@ -1,5 +1,6 @@
-import random
 import pygame
+import dobbelsteen
+import Variables
 
 
 class board:
@@ -40,13 +41,13 @@ class board:
                     #rows are only 4 wide they need half the coloured squares therefore they only draw when j is even
                     for k in range(42):
                         if j == 0:
-                            color = (0,255-k,0)
+                            color = (0,0,255-k)
                             pygame.draw.line(screen, color, (x+k+27, y+3), (x+k+27, y+45))
                         elif j == 2:
                             color = (255-k,255-k,0)
                             pygame.draw.line(screen, color, (x+k+27, y+3), (x+k+27, y+45))
                         elif j == 4:
-                            color = (0,0,255-k)
+                            color = (0,255-k,0)
                             pygame.draw.line(screen, color, (x+k+27, y+3), (x+k+27, y+45))
                         elif j == 6:
                             color = (255-k,0,0)
@@ -70,6 +71,14 @@ class avatars:
         self.x = x
         self.y = y
 
+    def movement(self, number):
+        if number == 1 or number == 2:
+            return 1
+        elif number == 3 or number == 4:
+            return 2
+        elif number == 5 or number == 6:
+            return 3
+
     #function to update the the position of a a player
     def update(self):
         #loops through the button presses to check what direction the player wants to go to
@@ -78,23 +87,26 @@ class avatars:
                 #checks if the left arrow key has been pressed and changes the x value to move the avatar
                 if event.key == pygame.K_LEFT:
                     #throw dice
+                    dobbelsteen.draw()
+                    #stel vraag if antwoord is goed beweeg
                     if self.y < 240:
-                        self.x -= 96 #* random.randint(1,3)
+                        self.x -= 96 * self.movement(Variables.number) #* random.randint(1,3)
                         #if the avatar is moved outside the bord it gets placed on the right of the board because its
                         #supposed to be circular
                         if self.x < 24:
                             self.x += 384
                     else:
-                        self.x -= 48 #* random.randint(1,3)#* dice throw
+                        self.x -= 48 * self.movement(Variables.number)#* random.randint(1,3)#* dice throw
                         #if the avatar is moved outside the bord it gets placed on the right of the board because its
-                        #supposed to be circular 48 144 240 336
+                        #supposed to be circular
                         if self.x < 24:
                             self.x += 384
                 #checks if the right arrow key has been pressed and changes the x value to move the avatar
                 elif event.key == pygame.K_RIGHT:
                     #throw dice
+                    dobbelsteen.draw()
                     if self.y < 240:
-                        self.x += 96 #* random.randint(1,3)
+                        self.x += 96 * self.movement(Variables.number)#* random.randint(1,3)
                         #if the avatar is moved outside the bord it gets placed on the left of the board because its
                         #supposed to be circular
                         if self.x > 360:
@@ -109,7 +121,8 @@ class avatars:
                 elif event.key == pygame.K_UP:
                     tempy = self.y
                     #throw dice
-                    self.y -= 48 #* random.randint(1,3)#* dice throw
+                    dobbelsteen.draw()
+                    self.y -= 48 * self.movement(Variables.number)#* random.randint(1,3)#* dice throw
                     if tempy > 216 and self.y <= 216:
                         if self.x == 24:
                             self.x += 24
@@ -135,7 +148,8 @@ class avatars:
                 elif event.key == pygame.K_DOWN:
                     tempy = self.y
                     #throw dice
-                    self.y += 48 #* random.randint(1,3)#* dice throw
+                    dobbelsteen.draw()
+                    self.y += 48 * self.movement(Variables.number)#* random.randint(1,3)#* dice throw
                     if tempy <= 216 and self.y > 216:
                         if self.x == 48:
                             self.x += 24
@@ -151,7 +165,7 @@ class avatars:
 
     def draw(self, screen):
         #load and draw the avatars(right now only 1 is drawn)
-        img=pygame.image.load("1.png")
+        img=pygame.image.load("P1.png")
         rect = img.get_rect(center=(player1.x, player1.y))
         screen.blit(img,rect)
 
@@ -159,9 +173,9 @@ class avatars:
 
 player1 = avatars(1, 48, 24)
 screen = pygame.display.set_mode((1280, 720))
+screen.fill((0,0,0))
 
 while True:
-    screen.fill((0,0,0))
     board.draw(screen)
     player1.update()
     player1.draw(screen)
