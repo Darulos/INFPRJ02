@@ -4,7 +4,6 @@ import sys
 import Score
 import random
 import psycopg2
-import gameboard
 
 
 def interact_database(command, params=None):
@@ -70,11 +69,9 @@ def GameTimer():
 
 
 def typen():
-    tempantwoord = None
-    Variables.Playerscore = 0
+    currentscore = 0
     highscore = str(interact_database("SELECT MAX(Score) FROM score;",)[0][0])
     # variable om het getypte antwoord op te slaan
-    boardloop = True
     loop = True
     antwoord = ""
     # alvast font vaststellen
@@ -105,7 +102,7 @@ def typen():
                 elif event.key == pygame.K_BACKSPACE:
                     antwoord = antwoord[:-1]
 
-                elif Variables.Correct is False:
+                elif Variables.Correct == False:
                     print("Game over! Goed antwoord:")
                     # print het goede antwoord op de vraag
                     print(answers(Variables.questionint))
@@ -120,8 +117,8 @@ def typen():
                 elif event.key == pygame.K_RETURN:
                     # if antwoord in answer, display correct, score +=
                     # haalt antwoord op uit database
-                    tempantwoord = antwoord.upper()
-                    if tempantwoord.upper() in answers(Variables.questionint).upper():  # and antwoord is not "":
+                    antwoord = antwoord.upper()
+                    if antwoord.upper() in answers(Variables.questionint).upper():  # and antwoord is not "":
                         Variables.Correct = True
                     else:
                         Variables.Correct = False
@@ -136,15 +133,8 @@ def typen():
                         if Variables.PlayerScore > BlijkbaarIsDitNodig:
                             Score.upload_score(Variables.PlayerScore, Variables.Player_Name)
                         Variables.QuestionTimer = 50
-                        loop = False
-                        while boardloop is True:
-                            Variables.player1 = gameboard.avatars(1, Variables.player1x, Variables.player1y)
-                            gameboard.board.draw(Variables.game.screen)
-                            Variables.player1.update()
-                            Variables.player1.draw(Variables.game.screen)
-                            pygame.display.flip()
-                            boardloop = False
-
+                        currentscore = Score.download_currentscore()
+                        begin()
                     elif Variables.Correct is False:
                         print("Game over! Goed antwoord:")
                         # print het goede antwoord op de vraag
@@ -153,22 +143,15 @@ def typen():
                         # geeft alleen de hoogste score weer
                         print(interact_database("SELECT MAX(Score) FROM score;")[0][0])
                         # geeft de speler de kans om nog even te kijken als dit in de pygame screen wordt weergegeven
-                        # game gaat verder maar de speler mag niet bewegen
-                        while boardloop is True:
-                            Variables.player1 = gameboard.avatars(1, Variables.player1x, Variables.player1y)
-                            gameboard.board.draw(Variables.game.screen)
-                            Variables.player1.update()
-                            Variables.player1.draw(Variables.game.screen)
-                            pygame.display.flip()
-                            boardloop = False
-
+                        pygame.quit()
+                        sys.exit()
             elif event.type is pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         # vult het scherm zwart
         Variables.game.screen.fill((0, 0, 0))
         # zorgt ervoor dat Number.PlayerScore wordt weergegeven. KNK
-        score_display = Variables.Playerscore
+        score_display = currentscore
         # geeft de score tekst weer
         score_block = score_font.render("score: {}".format(score_display), 1, (255, 255, 255))
         # zegt wat question is
@@ -203,19 +186,21 @@ def typen():
         # geeft antwoord weer
         Variables.game.screen.blit(block, rect)
         # geeft de score weer
-        Variables.game.screen.blit(score_block, (1400, 16))
+        Variables.game.screen.blit(score_block, (16, 16))
         # geeft de hoogste score weer
         # geeft answer weer
-
+        '''
         if not Variables.Correct:
             answer_display = answers(Variables.questionint)
             answer_block = font.render(answer_display, 1, (255, 255, 255))
             answer_rect = answer_block.get_rect(center=(640, 450))
             Variables.game.screen.blit(answer_block, answer_rect)
-
+        '''
         # flipt de screens zodat deze info zichtbaar wordt
         pygame.display.flip()
 
     Variables.function = "Menu_return"
     Variables.game.update()
+
     begin()
+
