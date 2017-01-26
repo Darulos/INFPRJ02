@@ -11,13 +11,14 @@ class Game():
         self.screen = None
         self.image = None
 
-        # Stating the size of the screen
-        self.width = 1920
-        self.height = 1080
-        size = (self.width, self.height)
-
         # Start Pygame
         pygame.init()
+
+        # Stating the size of the screen
+        screenInfo = pygame.display.Info()
+        self.width = screenInfo.current_w
+        self.height = screenInfo.current_h
+        size = (self.width, self.height)
         self.screen = pygame.display.set_mode(size, FULLSCREEN)
 
         # Setting the name of the window
@@ -35,9 +36,9 @@ class Game():
         self.Menu_button3 = Button((self.width*0.5-(button_width/2)), (self.height*0.70), os.path.join("Images", "Back_Button_Normal.png"), os.path.join("Images", "Back_Button_Pressed.png"), buttonsize, "VisibleExit", False)
 
         # Setting up various visual elements and text elements
-        self.Rules = Image(0, 0, False, "Images", "Rules.png", 1920, 1080, 1)
-        self.Background = Image(0, 0, True, "Images", "Menu_Background.png", 320, 180, 6)
-        self.Title = Image((self.width*0.8-300), (self.height*0.01), True, "Images", "Title.png",100, 50, 6)
+        self.Rules = Image(0, 0, False, "Images", "Rules.png", 1)
+        self.Background = Image(0, 0, True, "Images", "Menu_Background.png", 6)
+        self.Title_Animation = Animation((self.width * 0.8 - 300), (self.height * 0.01), "Images", "Title_Animated.png", 6, True, 4, 4, 1)
 
     def draw(self):
         # Setting the framerate
@@ -45,10 +46,10 @@ class Game():
         clock.tick(60)
 
         # Fill the screen
-        self.Background.draw()
+        self.Background.draw(self.screen)
 
         # Set the menu text on top
-        self.Title.draw()
+        self.Title_Animation.draw(self.screen)
 
         # Add image of a button
         self.Menu_button0.draw(self.screen)
@@ -57,7 +58,7 @@ class Game():
         self.Menu_button3.draw(self.screen)
 
         # Add text of information
-        self.Rules.draw()
+        self.Rules.draw(self.screen)
 
         # Flip the screen
         pygame.display.flip()
@@ -68,17 +69,17 @@ class Game():
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
-            self.Background.draw()
+            #self.Background.draw(self.screen)
             self.Rules.update()
             self.Menu_button3.update()
-            self.Title.update()
+            self.Title_Animation.update()
 
         # Scene switching to the playing menu
         if Variables.function == "Play":
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
-            self.Title.update()
+            self.Title_Animation.update()
             typen.start()
 
         # Scene switching to go back to the main menu from the playing menu
@@ -86,7 +87,7 @@ class Game():
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
-            self.Title.update()
+            self.Title_Animation.update()
             Variables.function = "Menu_info"
 
     def game_loop(self):
@@ -103,22 +104,26 @@ class Game():
             self.draw()
 
 class Image:
-    def __init__(self, x, y, check, path, image, width, height, scale):
+    def __init__(self, x, y, check, path, image, scale):
         self._visible = check
         self.path = path
         self.image = image
-        self.width = width
-        self.height = height
-        self.size = (int(width*scale), int(height*scale))
+        self.width = 0
+        self.height = 0
+        self.size = (0,0)
+        self.scale = scale
         self._rect = pygame.Rect(x, y, 0, 0)
         self.output2 = pygame.Surface(self._rect.size)
 
-    def draw(self):
+    def draw(self, screen):
         if self._visible:
             self.output = pygame.image.load(os.path.join(self.path, self.image))
+            self.width = self.output.get_width()
+            self.height = self.output.get_height()
+            self.size = (int(self.width*self.scale), int(self.height*self.scale))
             self.output2 = pygame.transform.scale(self.output, self.size)
             self._rect = pygame.Rect((self._rect.left, self._rect.top, self.output2.get_width(), self.output2.get_height()))
-            Variables.game.screen.blit(self.output2, self._rect)
+            screen.blit(self.output2, self._rect)
 
     def update(self):
         self._visible = not self._visible
@@ -132,11 +137,65 @@ class Text:
         self.width = width
         self.height = height
 
-    def draw(self):
+    def draw(self, screen):
         if self._visible:
             score_text = self.font_menu.render(self.text, 1, self.color)
             score_text_rect = score_text.get_rect(center=(self.width, self.height))
-            Variables.game.screen.blit(score_text, score_text_rect)
+            screen.blit(score_text, score_text_rect)
+
+    def update(self):
+        if Variables.init == 1:
+            self._visible = not self._visible
+
+class Animation:
+    def __init__(self, x, y, path, image, scale, visible, framerate, horizontal, vertical):
+        self.path = path
+        self.image = image
+        self.x = x
+        self.y = y
+        self.scale = scale
+        self._visible = visible
+        self._rect = pygame.Rect(x, y, 0, 0)
+        self.cell_position = 0
+        self.timed = 0
+        self.cell_list = []
+        self.rate = framerate
+        self.horizontal = horizontal
+        self.vertical = vertical
+
+    def draw(self, screen):
+        if self._visible:
+            # Loading image and scaling it
+            mainsheet = pygame.image.load(os.path.join(self.path, self.image))
+            size = (int(pygame.Surface.get_width(mainsheet)*self.scale), int(pygame.Surface.get_height(mainsheet)*self.scale))
+            output = pygame.transform.scale(mainsheet, size)
+            self._rect = pygame.Rect((self._rect.left, self._rect.top, output.get_width(), output.get_height()))
+
+            # Setting the cell sizes for the animation
+            sheet_size = (output.get_width(),output.get_height())
+            horiz_cell = self.horizontal
+            vert_cells = self.vertical
+            cell_width = int(sheet_size[0] / horiz_cell)
+            cell_height = int(sheet_size[1] / vert_cells)
+
+            # Loop of the animation
+            for y in range (0, sheet_size[1], cell_height):
+                for x in range (0, sheet_size[0], cell_width):
+                    surface = pygame.Surface((cell_width, cell_height), SRCALPHA)
+                    surface.blit(output, (0,0), (x, y, cell_width, cell_height))
+                    self.cell_list.append(surface)
+
+            # Set the timed divided value to adjust animation speed
+            self.timed += 1
+            if self.timed % self.rate == 0:
+                if self.cell_position < len(self.cell_list) - 1:
+                    self.cell_position += 1
+                else:
+                    self.cell_position = 0
+                    #self.timed = 0
+
+            # Blit the images to the screen
+            screen.blit(self.cell_list[self.cell_position], (self.x, self.y))
 
     def update(self):
         if Variables.init == 1:
