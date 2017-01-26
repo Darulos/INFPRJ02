@@ -5,6 +5,7 @@ import os
 
 def draw():
 
+    #Setting up textures for the dice
     Dice1 = pygame.image.load(os.path.join('Images', 'Dice1.png'))
     Dice2 = pygame.image.load(os.path.join('Images', 'Dice2.png'))
     Dice3 = pygame.image.load(os.path.join('Images', 'Dice3.png'))
@@ -12,9 +13,10 @@ def draw():
     Dice5 = pygame.image.load(os.path.join('Images', 'Dice5.png'))
     Dice6 = pygame.image.load(os.path.join('Images', 'Dice6.png'))
 
+    #Creating random number for diceroll
     Variables.number = random.randint(1, 6)
 
-
+    #Linking diceroll result to dice texture
     if Variables.number == 1:
         Variables.game.screen.blit(Dice1, (500,500))
     if Variables.number == 2:
