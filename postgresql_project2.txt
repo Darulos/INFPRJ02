@@ -92,7 +92,7 @@ values
 (90, 'b', 'Hoe heet de in Rotterdam geboren trainer van de nederlandse waterpolo dames, die goud won in 2008 op de Olympische spelen?', '', 'Robin van Galen'),
 (91, 'b', 'Welke veldsport wordt in Rotterdam het meest gespeeld?', '', 'Voetbal'),
 (92, 'b', 'Bij welke sport gebruik je een net om de bal in het doel te gooien?', '', 'lacrosse'),
-(93, 'b', 'Een speler staat bij voetbal in de buitenspelpositie als deze..', 'A Zich verder van het doel bevindt. B Zich dichter bij de doellijn van de tegenstander bevindt dan de bal en de voorlaatste tegenstander. C Zich buiten de lijn van het veld bevindt en de bal in het spel is.', 'B Zich dichter bij de doellijn van de tegenstander bevindt dan de bal en de voorlaatste tegenstander.'),
+(93, 'b', 'Wat zit er onder de zool van een voetbalschoen?', 'A Spikes B Noppen C Nobben', 'B Noppen'),
 (94, 'b', 'Hoe heet het stadion van Sparta Rotterdam?', 'A De Toren B Het Kasteel C De Arena', 'B Het Kasteel'),
 (95, 'b', 'In welk jaar startte de Tour de France in Rotterdam?', 'A 2000 B 2005 C 2010', ' 2010'),
 (96, 'b', 'Voor welke 3 sporten is de Willem Alexander baan het meest geschikt?', 'A watersporten, wielrennen en hardlopen B voetbal, hockey en basketbal C fitness, hardlopen en basketbal', 'B voetbal, hockey en basketbal'),
