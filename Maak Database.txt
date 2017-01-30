@@ -8,5 +8,6 @@ CREATE TABLE Questions(
 
 CREATE TABLE Score(
 	Name varchar(20) PRIMARY KEY,
-	Score integer
+	Correct integer,
+	Wrong integer
 );
