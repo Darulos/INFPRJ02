@@ -1,8 +1,0 @@
-create table vragen(
-	vraagnummer integer primary key,
-	vraagsoort varchar(2),
-	vraag varchar(250),
-	mogelijkheden varchar(250),
-	antwoord varchar(250)
-);
-GEBRUIK DEZE NIET ER IS EEN NIEUWERE VERSIE BESCHIKBAAR HAHA NU KAN JE HEM NIET GEBRUIKEN WANT DIT IS EEN ERROR JIJ LOSER SCRUB KUSJES JASPER
