@@ -1,9 +1,11 @@
 CREATE TABLE Questions(
 	Question_ID integer PRIMARY KEY,
 	Type varchar(3),
-	Question varchar(200),
-	Possibilities varchar(200),
-	Answers varchar(200)
+	Question varchar(350),
+	Possibilities1 varchar(350),
+	Possibilities2 varchar(350),
+	Possibilities3 varchar(350),
+	Answers varchar(350)
 );
 
 CREATE TABLE Score(
