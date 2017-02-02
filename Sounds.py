@@ -5,6 +5,7 @@ import pygame, os, random
 class PlaySound:
     # Title Screen Music~
     def TitleScreen(self):
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.load(os.path.join("Audio", "TitleScreen.ogg"))
         pygame.mixer.music.play(-1, 0)
 
@@ -15,6 +16,7 @@ class PlaySound:
 
     # Actual game bgm
     def GameBGM(self):
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.load(os.path.join("Audio", "Typenbgm.ogg"))
         pygame.mixer.music.play(0, 0)
 
@@ -50,20 +52,20 @@ class PlaySound:
 
     # This is a Clock Tick sound
     def ClockTick(self):
-        ClockTick = pygame.mixer.Sound(os.path.join("Audio", "Clock_Tick"))
+        ClockTick = pygame.mixer.Sound(os.path.join("Audio", "Clock_Tick.ogg"))
         ClockTick.play(0, 0, 0)
 
     # This is a sound for a dice rolling
     def DiceRoll(self):
         RandDice = random.randint(1, 3)
         if RandDice == 1:
-            Dice1 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_1"))
+            Dice1 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_1.ogg"))
             Dice1.play(0, 0, 0)
         elif RandDice == 2:
-            Dice2 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_2"))
+            Dice2 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_2.ogg"))
             Dice2.play(0, 0, 0)
         elif RandDice == 3:
-            Dice3 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_2"))
+            Dice3 = pygame.mixer.Sound(os.path.join("Audio", "Dice_Roll_2.ogg"))
             Dice3.play(0, 0, 0)
 
     # Should play when you answer a question correct
