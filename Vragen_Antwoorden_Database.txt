@@ -1,5 +1,5 @@
-INSERT INTO questions(question_id, type, question, possibilities1, possibilities2, possibilities3, answers, Question_Type)
-VALUES
+insert into questions(question_id, type, question, possibilities1, possibilities2, possibilities3, answers, Question_Type)
+values
 (1, 'g', 'Welk Rotterdams kantoorgebouw was toen de eerste wolkenkrabber van Europa?', '', '', '', 'Het Witte Huis', 'Open'),
 (2, 'g', 'In welk voormalig hoofdkantoor is Hotel New York gevestigd?', '', '', '', 'Holland Amerika lijn', 'Open'),
 (3, 'g', 'Hoe heet het beeld dat Ossip Zadkine ontwierp naar aanleiding van het bombardement in Rotterdam? Het is onthuld in 1953 en staat aan de Leuvenhaven naast het Maritiem Museum.', '', '', '', 'De Verwoeste Stad', 'Open'),
@@ -59,7 +59,7 @@ VALUES
 (57, 'gr', 'Hoe heten de bekendste huizen van Rotterdam?', '','','', 'De Kubuswoningen', 'Open'),
 (58, 'gr', 'Wat is het hoogste gebouw van Rotterdam?', '','','', 'De Maastoren', 'Open'),
 (59, 'gr', 'Hoeveel mensen wonen er ongeveer in Rotterdam?', 'A 490 000','B 550 000','C 610 000', 'C 610 000', 'Meerkeuze'),
-(60, 'gr', 'Hoeveel winkels telt Rotterdam ongeveer?', 'A 8500','B 9500','C 10 500', 'B 9500'),
+(60, 'gr', 'Hoeveel winkels telt Rotterdam ongeveer?', 'A 8500','B 9500','C 10 500', 'B 9500', 'Meerkeuze'),
 (61, 'r', 'Welke landen kun je behalve Nederland ook in Miniworld Rotterdam zien?', 'A Luxemburg en Belgie','B Duitsland en Belgie','C Duitsland en Frankrijk', 'A Luxemburg en Belgie', 'Meerkeuze'),
 (62, 'r', 'Op welk plein vindt jaarlijks het Najaarskermis Rotterdam plaats?', 'A De Mullerpier','B Pier 80','C Schouwburgplein', 'A De Mullerpier', 'Meerkeuze'),
 (63, 'r', 'Welke bar in Rotterdam werd in 2009 de beste bar ter wereld benoemd?', 'A De Witte Aap','B Het NRC','C Cafe de Beurs', 'A De Witte Aap', 'Meerkeuze'),
@@ -71,7 +71,7 @@ VALUES
 (69, 'r', 'In welke maand vinden Wereldhavendagen plaats?', '', '', '', 'September', 'Open'),
 (70, 'r', 'Hoe heet het grootste filmfestival in Rotterdam?', '', '', '', 'Het Internationaal Film Festival', 'Open'),
 (71, 'r', 'Bij welke haven in Rotterdam bevindt zich het Drijvend Paviljoen?', '', '', '', 'Rotterdamse Rijnhaven', 'Open'),
-(72, 'r', 'Hoe heet het theater dat zich naast de Pathe Schouwburgplein bevindt?', '', '', '', 'Rotterdamse Schouwburg', 'Open)',
+(72, 'r', 'Hoe heet het theater dat zich naast de Pathe Schouwburgplein bevindt?', '', '', '', 'Rotterdamse Schouwburg', 'Open'),
 (73, 'r', 'Bij welk station is het startpunt van de Rotterdam Street Art Route?', '', '', '', 'Centraal Station', 'Open'),
 (74, 'r', 'Bij welke brug in Rotterdam vindt "Het Nationale Vuurwerk" plaats', '', '', '', 'De Erasmusbrug', 'Open'),
 (75, 'r', 'Wat is de populairste straat in Rotterdam om uit te gaan?', '', '', '', 'De Witte de Withstraat', 'Open'),
@@ -83,7 +83,7 @@ VALUES
 (81, 'r', 'Waar geeft de Rotterdam Tours onder andere rondleidingen?', 'A De Euromast','B Het Museumplein','C De Markthal', 'C De Markthal', 'Meerkeuze'),
 (82, 'r', 'Waar kan je NIET terecht om te gaan zwemmen', 'A Hoek van Holland','B  Euromast','C Plaswijckpark', 'B Euromast Park', 'Meerkeuze'),
 (83, 'r', 'Hoeveel bezoekers zijn er jaarlijks bij de Marathon Rotterdam?', 'A 925 000','B 675 000','C 830 000', 'A 925 000', 'Meerkeuze'),
-(84, 'r', 'Voor welk museum staat het monument van Zadkine genaamd "De Verwoest Stad"?', 'A Het Havensmuseum','B Het Mariniersmuseum','C Het Maritiem Museum', 'C Het Maritiem Museum'),
+(84, 'r', 'Voor welk museum staat het monument van Zadkine genaamd "De Verwoest Stad"?', 'A Het Havensmuseum','B Het Mariniersmuseum','C Het Maritiem Museum', 'C Het Maritiem Museum', 'Meerkeuze'),
 (85, 'r', 'In welke bioscoop vindt het Wildlife Film Fetival plaats?', 'A Cinerama','B Pathe de Kuip','C Pathe Schouwburgplein', 'A Cinerama', 'Meerkeuze'),
 (86, 'r', 'Voor welk vervoermiddel is er geen tour door Rotterdam beschikbaar?', 'A Segway','B Boot','C Auto', 'C Auto', 'Meerkeuze'),
 (87, 'r', 'Welke van de volgende Pathe bioscopen is NIET in Rotterdam?', 'A Pathe de Kuip','B Pathe de Kroon','C Pathe Schouwbrugplein', 'B Pathe de Kroon', 'Meerkeuze'),
@@ -92,7 +92,7 @@ VALUES
 (90, 'b', 'Hoe heet de in Rotterdam geboren trainer van de Nederlandse waterpolo dames, die goud won in 2008 op de Olympische spelen?', '', '', '', 'Robin van Galen', 'Open'),
 (91, 'b', 'Welke veldsport wordt in Rotterdam het meest gespeeld?', '', '', '', 'Voetbal', 'Open'),
 (92, 'b', 'Bij welke sport gebruik je een net om de bal in het doel te gooien?', '','','', 'Lacrosse', 'Open'),
-(93, 'b', 'Wat zit er onder de zool van een voetballer?', 'A Nodden', 'B Noppen', 'C Nobben', 'B Noppen', 'Meerkeuze'),
+(93, 'b', 'Een speler staat bij voetbal in de buitenspelpositie als deze:...', 'A Zich verder van het doel bevindt','B Zich dichter bij de doellijn van de tegenstander bevindt dan de bal en de voorlaatste tegenstander','C Zich buiten de lijn van het veld bevindt en de bal in het spel is', 'B Zich dichter bij de doellijn van de tegenstander bevindt dan de bal en de voorlaatste tegenstander', 'Meerkeuze'),
 (94, 'b', 'Hoe heet het stadion van Sparta Rotterdam?', 'A De Toren','B Het Kasteel','C De Arena', 'B Het Kasteel', 'Meerkeuze'),
 (95, 'b', 'In welk jaar startte de Tour de France in Rotterdam?', 'A 2000','B 2005','C 2010', ' 2010', 'Meerkeuze'),
 (96, 'b', 'Voor welke 3 sporten is de Willem Alexander baan het meest geschikt?', 'A Watersporten, wielrennen en hardlopen','B Voetbal, hockey en basketbal','C Fitness, hardlopen en basketbal', 'B Voetbal, hockey en basketbal', 'Meerkeuze'),
@@ -104,7 +104,7 @@ VALUES
 (102, 'b', 'Op welke positie in het veld speelde Coen Moulijn voor zowel Feyenoord als het Nederlands eltal?', 'A Rechtsback','B Linksback','C Linksbuiten', 'C Linksbuiten', 'Meerkeuze'),
 (103, 'b', 'In welk jaar is de honkbalclub Neptunes opgericht?', 'A 1850','B 1875','C 1900', 'C 1900', 'Meerkeuze'),
 (104, 'b', 'Op welke baan vond het WK roeien in 2016 plaats?', 'A Willem Alexander Baan','B Beatrix Baan','C Juliana Baan', 'A Willem Alexander Baan', 'Meerkeuze'),
-(105, 'b', 'Welke van de volgende clubs is een Rotterdamse hockeyclub?', 'A HVGR','B Focus','C H.C. Rotterdam', 'C H.C. Rotterdam', 'Meerkeuze'),
+(105, 'b', 'Welke van de volgende clubs is een Rotterdamse hockeyclub?', 'A HVGR','B Focus','C H.C. Rotterdam', 'C H.C. Rotterdam', 'Meerkeuze'),
 (106, 'b', 'Welke Olympier groeide op in Rotterdam?', 'A Dorian van Rijsselberghe','B Mahinde Verkerk','C Edit Bosch', 'B Mahinde Verkerk', 'Meerkeuze'),
 (107, 'b', 'Hoe heet het stadion van de honkbalclub Neptunes?', '','','', 'Neptunes Familiestadion', 'Open'),
 (108, 'b', 'Hoe heet de Formule 1 race in Rotterdam?', '','', '', 'City Racing Rotterdam', 'Open'),
@@ -118,4 +118,4 @@ VALUES
 (116, 'b', 'Vanuit welke lijn moet een speler bij basketbal schieten om een driepunter te scoren?', '','','', 'Driepuntslijn', 'Open'),
 (117, 'b', 'Hoe heet de hoogste Nederlandse basketbal competitie?', '','', '', 'Dutch Basketball League', 'Open'),
 (118, 'b', 'Er is een Rotterdamse basketbalclub op het hoogste niveau, hoe heet deze club?', '','','', 'Forward Lease Rotterdam', 'Open'),
-(119, 'b', 'Hoe noemt men het scoren bij basketbal, waarbij de speler een hoge sprong maakt en de bal in de basket "slaat"?', '', '', '', 'Dunken', 'Open'));
+(119, 'b', 'Hoe noemt men het scoren bij basketbal, waarbij de speler een hoge sprong maakt en de bal in de basket "slaat"?','','', '', 'Dunken', 'Open');
