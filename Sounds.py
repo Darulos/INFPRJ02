@@ -18,7 +18,7 @@ class PlaySound:
     def GameBGM(self):
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.load(os.path.join("Audio", "Typenbgm.ogg"))
-        pygame.mixer.music.play(0, 0)
+        pygame.mixer.music.play(-1, 0)
 
     # This is a keyboard sound
     def KeyPress(self):
