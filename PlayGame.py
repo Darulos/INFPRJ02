@@ -85,7 +85,38 @@ class Avatar:
                         self.y -= 48 * movement
                         # Check for winning condition
                         if self.y < 168:
-                            return 0
+                            screen = Variables.game.screen#pygame.display.set_mode(size)
+                            pygame.display.set_caption("end screen")
+                            endscreen = pygame.image.load(os.path.join("Images", "Euromast_End.png"))
+                            echtscherm = pygame.transform.scale(endscreen, (1920,1080))
+                            other_width = 32*4
+                            other_height = 32*4
+                            othersize = (int(other_width), int(other_height))
+                            ExitButton = Button((1920*0.96-other_width/2), (1080*0.07-other_height/2), os.path.join("Images", "Exit_Normal.png"), os.path.join("Images", "Exit_Pressed.png"), othersize, "Exit", True)
+                            button_width = 64*6
+                            button_height = 16*6
+                            buttonsize = (int(button_width), int(button_height))
+                            YesButton = Button((1920*0.5-button_width/2), (1080*0.7-button_height/2), os.path.join("Images", "Ja_Normal.png"), os.path.join("Images", "Ja_Pressed.png"), buttonsize, "Yes", True)
+                            NoButton = Button((1920*0.5-button_width/2), (1080*0.8-button_height/2), os.path.join("Images", "Nee_Normal.png"), os.path.join("Images", "Nee_Pressed.png"), buttonsize, "No", True)
+                            while Variables.gameloop:
+                                for event in pygame.event.get():
+                                    if event.type == pygame.QUIT:
+                                        # Give the signal to quit
+                                        sys.exit()
+                                    ExitButton.eventhandler(event)
+                                    YesButton.eventhandler(event)
+                                    NoButton.eventhandler(event)
+                                screen.blit(echtscherm, (0, 0))
+                                if not Variables.exitcheck:
+                                    ExitButton.draw(screen)
+                                else:
+                                    YesButton.draw(screen)
+                                    NoButton.draw(screen)
+
+
+                                    # Flip the screen to show contents
+                                pygame.display.flip()
+
                             """Something something winning"""
                     elif direction == "Down":
                         self.y += 48 * movement
