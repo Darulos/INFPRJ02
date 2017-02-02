@@ -5,7 +5,8 @@ CREATE TABLE Questions(
 	Possibilities1 varchar(350),
 	Possibilities2 varchar(350),
 	Possibilities3 varchar(350),
-	Answers varchar(350)
+	Answers varchar(350),
+	Question_Type varchar(10)
 );
 
 CREATE TABLE Score(
