@@ -2,7 +2,7 @@ insert into questions(question_id, type, question, possibilities1, possibilities
 values
 (1, 'g', 'Welk Rotterdams kantoorgebouw was toen de eerste wolkenkrabber van Europa?', '', '', '', 'Het Witte Huis', 'Open'),
 (2, 'g', 'In welk voormalig hoofdkantoor is Hotel New York gevestigd?', '', '', '', 'Holland Amerika lijn', 'Open'),
-(3, 'g', 'Hoe heet het beeld dat Ossip Zadkine ontwierp naar aanleiding van het bombardement in Rotterdam? Het is onthuld in 1953 en staat aan de Leuvenhaven naast het Maritiem Museum.', '', '', '', 'De Verwoeste Stad', 'Open'),
+(3, 'g', 'Hoe heet het beeld dat Ossip Zadkine ontwierp naar aanleiding van het bombardement in Rotterdam? Het is onthuld in 1953 en staat aan de Leuvenhaven naast het Maritiem Museum.', '', '', '', 'De Verwoestte Stad', 'Open'),
 (4, 'g', 'Wat was geen beroep van Erasmus?', 'A Filosoof', 'B Priester', 'C Natuurkundige', 'C Natuurkundige', 'Meerkeuze'),
 (5, 'g', 'Hoe heette de loods in het havengebied dat in 1942 het verzamelpunt was voor de deportatie van de Joodse inwoners?', '', '', '', 'Loods24', 'Open'),
 (6, 'g', 'Wanneer viel Duitsland Nederland binnen in de Tweede Wereldoorlog?', 'A 5 mei 1940', '10 mei 1940', '15 mei 1940', 'B 10 mei 1940', 'Meerkeuze'),
@@ -18,7 +18,7 @@ values
 (16, 'g', 'Waar dankt Rotterdam zijn naam aan?', 'A Kooplieden hadden dit vroeger bedacht.', 'B Het lag aan de rivier de Rotte', 'C Er was een dam aangelegd in de Maas', 'B Het lag aan de rivier de Rotte', 'Meerkeuze'),
 (17, 'g', 'Wat is het enige overgebleven middeleeuwse gebouw in de binnenstad van Rotterdam?', 'A De oude haven','B VOC Magazijn', 'C Sint-Laurenskerk', 'C Sint-Laurenskerk', 'Meerkeuze'),
 (18, 'g', 'Wat was tijdens de Tweede Wereldoorlog de enige weg naar het centrum dat de Duitsers probeerden te bereiken?', 'A De Nieuwe Binnenweg', 'B Maasbrug', 'C Koninginnenbrug', 'B Maasbrug', 'Meerkeuze'),
-(19, 'g', 'Wat is de officiele naam van de koopgoot?', 'A De Ondergrondse Winkelstraat.', 'B Beurstraverse', 'C De Koopgoot', 'B Beurstraverse', 'Meerkeuze'),
+(19, 'g', 'Wat is de officiele naam van de Koopgoot?', 'A De Ondergrondse Winkelstraat.', 'B Beurstraverse', 'C De Koopgoot', 'B Beurstraverse', 'Meerkeuze'),
 (20, 'g', 'Na 1872 is de stad Rotterdam snel groot geworden. Pieter Caland had een plan om Rotterdam met de zee te verbinden. Hoe noemde hij die verbinding?', 'A De Nieuwe Waterweg', 'B De Maas Zeeverbinding', 'C Het Nieuwe Water Kanaal', 'A De Nieuwe Waterweg', 'Meerkeuze'),
 (21, 'g', 'Hoe heette de haven van Rotterdam oorspronkelijk tijdens zijn ontstaan?', 'A De Waalhaven', 'B De Maashaven', 'C De Europoort', 'B De Maashaven', 'Meerkeuze'),
 (22, 'g', 'Hoe heet de grootste deelgemeente van Rotterdam?', '', '', '', 'Prins Alexander', 'Open'),
