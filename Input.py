@@ -1,7 +1,9 @@
-import os, sys, pygame, random, Sounds
+# Copyright 'We gaan voor een 10', 2017
+
+import os, sys, pygame, random
 
 # Importing other modules
-import Variables, Score, PlayGame
+import Variables, Score, PlayGame, Sounds
 from pygame.locals import *
 
 class Play:
@@ -21,6 +23,7 @@ class Play:
         self.Player4y = 840
         self.player = ""
         self.count = 1
+        self.type = 1
         self.StartingPlace = ""
         self.screenwidth, self.screenheight = self.screen.get_size()
 
@@ -31,20 +34,10 @@ class Play:
         self.background = pygame.image.load(os.path.join("Images", "Play_Background.png"))
         self.backgroundoutput = pygame.transform.scale(self.background, (1920, 1080))
 
-        # Setting up the first input question (name)
-        name_display = "Wat is uw naam?"
-        self.name_block = self.font.render(name_display, 1, (0, 255, 255))
-        self.name_rect = self.name_block.get_rect(center=(self.screenwidth/2, self.screenheight*0.2))
-
-        # Setting up the second input question (place)
-        place_display = "Wilt u beginnen op rood, groen, geel of blauw?"
-        self.place_block = self.font.render(place_display, 1, (0, 255, 255))
-        self.place_rect = self.place_block.get_rect(center=(self.screenwidth/2, self.screenheight*0.2))
-
         # Setting up the number of players question (first menu)
-        number_display = "Met hoeveel spelers wilt u spelen?"
-        self.number_block = self.font.render(number_display, 1, (0, 255, 255))
-        self.number_rect = self.number_block.get_rect(center=(self.screenwidth/2, self.screenheight*0.2))
+        self.numbermenu = pygame.image.load(os.path.join("Images", "Number.png"))
+        self.numbermenuoutput = pygame.transform.scale(self.numbermenu, (1920, 184))
+        self.numbermenurect = self.numbermenuoutput.get_rect(center=(self.screenwidth*0.5, self.screenheight*0.2))
 
         # The four buttons, indicating how many players
         button_width = 64*6
@@ -56,12 +49,9 @@ class Play:
         self.FourButton = Button((self.screenwidth*0.65-button_width/2), (self.screenheight*0.6-button_height/2), os.path.join("Images", "Four_Normal.png"), os.path.join("Images", "Four_Pressed.png"), buttonsize, "4", True, 4)
 
         # Setting up the avatar menu text (second menu)
-        avatar_display1 = "Selecteer uw avatar door op de afbeeldingen te drukken en geef uw naam."
-        #avatar_display2 = " te drukken en geef uw naam."
-        self.avatar_block1 = self.font.render(avatar_display1, 1, (0, 255, 255))
-        self.avatar_rect1 = self.avatar_block1.get_rect(center=(self.screenwidth/2, self.screenheight*0.2))
-        #self.avatar_block2 = self.font.render(avatar_display2, 1, (0, 255, 255))
-        #self.avatar_rect2 = self.avatar_block2.get_rect(center=(self.screenwidth/2, self.screenheight*0.25))
+        self.avatarmenu = pygame.image.load(os.path.join("Images", "Avatar.png"))
+        self.avatarmenuoutput = pygame.transform.scale(self.avatarmenu, (1920, 184))
+        self.avatarmenurect = self.avatarmenuoutput.get_rect(center=(self.screenwidth*0.5, self.screenheight*0.2))
 
         # The four buttons for avatar selection
         avatar_width = 48*5
@@ -72,6 +62,17 @@ class Play:
         self.AvaThreeButton = Button((self.screenwidth*0.6-avatar_width/2), (self.screenheight*0.5-avatar_height/2), os.path.join("Images", "P3.png"), None, avatarsize, "Avatar3", True, 3)
         self.AvaFourButton = Button((self.screenwidth*0.8-avatar_width/2), (self.screenheight*0.5-avatar_height/2), os.path.join("Images", "P4.png"), None, avatarsize, "Avatar4", True, 4)
 
+        # Initialising the background for the avatars and input
+        self.inputarea = pygame.image.load(os.path.join("Images", "TextFrame.png"))
+        self.inputareaoutput = pygame.transform.scale(self.inputarea, (250, 250))
+
+        # Initialising the answer input area
+        self.answerarea = pygame.image.load(os.path.join("Images", "Card_Black.png"))
+        self.answerareaoutput = pygame.transform.scale(self.answerarea, (300, 75))
+
+        # Exit button
+        self.ExitButton = Button((self.screenwidth*0.85-button_width/2), (self.screenheight*0.90-button_height/2), os.path.join("Images", "Back_Button_Normal.png"), os.path.join("Images", "Back_Button_Pressed.png"), buttonsize, "Exit", True, None)
+
     # Function to draw all the questions
     def draw(self):
         # Draw the background
@@ -79,7 +80,7 @@ class Play:
 
         if Variables.inputpart == 1:
             # Drawing the question for how many players
-            self.screen.blit(self.number_block, self.number_rect)
+            self.screen.blit(self.numbermenuoutput, self.numbermenurect)
 
             # Drawing the four buttons
             self.OneButton.draw(self.screen)
@@ -93,37 +94,66 @@ class Play:
 
         if Variables.inputpart == 2:
             # Drawing the avatar question menu
-            self.screen.blit(self.avatar_block1, self.avatar_rect1)
-            #self.screen.blit(self.avatar_block2, self.avatar_rect2)
+            self.screen.blit(self.avatarmenuoutput, self.avatarmenurect)
 
             # Drawing the buttons for the avatar menu selection
             # 1 player
             if Variables.numbplayers == 1:
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaOneButton.draw(self.screen)
 
             # 2 players
             if Variables.numbplayers == 2:
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaOneButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaTwoButton.draw(self.screen)
 
             # 3 players
             if Variables.numbplayers == 3:
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaOneButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaTwoButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaThreeButton.draw(self.screen)
 
             # 4 players
             if Variables.numbplayers == 4:
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaOneButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaTwoButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaThreeButton.draw(self.screen)
+
+                self.inputarearect = self.inputareaoutput.get_rect(center=(self.screenwidth*0.8, self.screenheight*0.5))
+                self.screen.blit(self.inputareaoutput, self.inputarearect)
                 self.AvaFourButton.draw(self.screen)
+
 
             # Draw the entered answers
             self.typedraw()
 
             # Drawing the exit button
             """Something something exit button to go to inputpart 1"""
+
+        # Draw the exit button
+        self.ExitButton.draw(self.screen)
 
         # Flip the screen
         pygame.display.flip()
@@ -143,6 +173,7 @@ class Play:
                 self.AvaTwoButton.eventhandler(event)
                 self.AvaThreeButton.eventhandler(event)
                 self.AvaFourButton.eventhandler(event)
+                self.ExitButton.eventhandler(event)
             self.draw()
             self.typen()
 
@@ -154,72 +185,86 @@ class Play:
     # Function to draw all the answers given
     def typedraw(self):
         if self.count == 1:
-            block = self.font.render(self.player, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
-            self.screen.blit(block, rect)
-
             if Variables.numbplayers >= 1:
                 # Indication text
-                block = self.font.render("Vul in", 1, (0, 255, 255))
-                rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.8))
-                self.screen.blit(block, rect)
+                rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+                self.screen.blit(self.answerareaoutput, rect)
 
-        elif self.count == 2:
-            block = self.font.render(self.PlayerName1, 1, (0, 255, 255))
+            block = self.font.render(self.player, 1, (255, 255, 255))
             rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
-            block = self.font.render(self.player, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
+        elif self.count == 2:
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName1, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
             if Variables.numbplayers >= 2:
                 # Indication text
-                block = self.font.render("Vul in", 1, (0, 255, 255))
-                rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.8))
-                self.screen.blit(block, rect)
+                rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
+                self.screen.blit(self.answerareaoutput, rect)
 
-        elif self.count == 3:
-            block = self.font.render(self.PlayerName1, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
-            self.screen.blit(block, rect)
-
-            block = self.font.render(self.PlayerName2, 1, (0, 255, 255))
+            block = self.font.render(self.player, 1, (255, 255, 255))
             rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
-            block = self.font.render(self.player, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.7))
+        elif self.count == 3:
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName1, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+            self.screen.blit(block, rect)
+
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName2, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
             if Variables.numbplayers >= 3:
                 # Indication text
-                block = self.font.render("Vul in", 1, (0, 255, 255))
-                rect = block.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.8))
-                self.screen.blit(block, rect)
+                rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.7))
+                self.screen.blit(self.answerareaoutput, rect)
 
-        elif self.count == 4:
-            block = self.font.render(self.PlayerName1, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
-            self.screen.blit(block, rect)
-
-            block = self.font.render(self.PlayerName2, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
-            self.screen.blit(block, rect)
-
-            block = self.font.render(self.PlayerName3, 1, (0, 255, 255))
+            block = self.font.render(self.player, 1, (255, 255, 255))
             rect = block.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
-            block = self.font.render(self.player, 1, (0, 255, 255))
-            rect = block.get_rect(center=(self.screenwidth*0.8, self.screenheight*0.7))
+        elif self.count == 4:
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName1, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.2, self.screenheight*0.7))
+            self.screen.blit(block, rect)
+
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName2, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.4, self.screenheight*0.7))
+            self.screen.blit(block, rect)
+
+            rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.7))
+            self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.PlayerName3, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.6, self.screenheight*0.7))
             self.screen.blit(block, rect)
 
             if Variables.numbplayers == 4:
                 # Indication text
-                block = self.font.render("Vul in", 1, (0, 255, 255))
-                rect = block.get_rect(center=(self.screenwidth*0.8, self.screenheight*0.8))
-                self.screen.blit(block, rect)
+                rect = self.answerareaoutput.get_rect(center=(self.screenwidth*0.8, self.screenheight*0.7))
+                self.screen.blit(self.answerareaoutput, rect)
+
+            block = self.font.render(self.player, 1, (255, 255, 255))
+            rect = block.get_rect(center=(self.screenwidth*0.8, self.screenheight*0.7))
+            self.screen.blit(block, rect)
 
     # Function to enable typing in the names (is on loop)
     def typen(self):
@@ -230,47 +275,50 @@ class Play:
                     if event.type == pygame.KEYDOWN:
                         # For capital letters
                         if event.unicode.isalpha():
-                            Sounds.PlaySound.KeyPress(self)
                             self.player += event.unicode
 
                         # For numbers
                         elif event.unicode.isdigit():
-                            Sounds.PlaySound.KeyPress(self)
                             self.player += event.unicode
 
                         # For spaces
                         elif event.key == pygame.K_SPACE:
-                            Sounds.PlaySound.KeySpace(self)
                             self.player += " "
 
                         # For dots
                         elif event.key == pygame.K_PERIOD:
-                            Sounds.PlaySound.KeyPress(self)
                             self.player += "."
 
                         # Enables the function of a backspace
                         elif event.key == pygame.K_BACKSPACE:
-                            Sounds.PlaySound.KeySpace()
                             self.player = self.player[:-1]
 
                         # Checks the given name with names in the databases and empties it if there's a copy
                         elif event.key == pygame.K_RETURN:
                             if not Score.interact_database("select name from score where name = %s", False, (self.player,)):
-                                Score.interact_database("INSERT INTO Score VALUES(%s, %s)", True, (self.player, 0))
+                                Score.interact_database("INSERT INTO Score VALUES(%s, %s, %s, %s, %s)", True, (self.player, 0, 0, 0, 0))
+
                             # Setting the next typing box
                             if self.count == 1:
+                                Variables.Player1Name = self.player
                                 self.PlayerName1 = self.player
                                 if Variables.numbplayers == 1:
                                     self.positioning()
+
                             elif self.count == 2:
+                                Variables.Player2Name = self.player
                                 self.PlayerName2 = self.player
                                 if Variables.numbplayers == 2:
                                     self.positioning()
+
                             elif self.count == 3:
+                                Variables.Player3Name = self.player
                                 self.PlayerName3 = self.player
                                 if Variables.numbplayers == 3:
                                     self.positioning()
+
                             elif self.count == 4:
+                                Variables.Player4Name = self.player
                                 self.PlayerName4 = self.player
                                 self.positioning()
                             self.typereset()
@@ -283,28 +331,23 @@ class Play:
                     self.AvaTwoButton.eventhandler(event)
                     self.AvaThreeButton.eventhandler(event)
                     self.AvaFourButton.eventhandler(event)
+                    self.ExitButton.eventhandler(event)
 
     # Function to set the players to a certain location
     def positioning(self):
         list = []
-        counting = []
+        counting = [768, 864, 960, 1056]
         x = 0
         # Put numbers in the list and shuffle them
         for i in range (1, Variables.numbplayers+1):
             list.append(i)
-            counting.append(i)
         random.shuffle(list)
+        random.shuffle(counting)
 
         # To assign a position to a player
         for j in range (0, Variables.numbplayers):
-            if counting[j] == 1:
-                x = 768
-            elif counting[j] == 2:
-                x = 864
-            elif counting[j] == 3:
-                x = 960
-            elif counting[j] == 4:
-                x = 1056
+            x = counting[0]
+            counting.pop(0)
 
             if list[j] == 1:
                 self.Player1x = x
@@ -318,28 +361,26 @@ class Play:
         # Opening the actual game
         PlayGame.begin(self.screen, pygame.font.SysFont("consolas", 30, True), self.Player1x, self.Player2x, self.Player3x, self.Player4x, self.AvaOneButton.image, self.AvaTwoButton.image, self.AvaThreeButton.image, self.AvaFourButton.image,)
 
-    # Function to draw the questions and answers
-    def drawInput(self, show, type):
-        # Creating the background
-        self.screen.blit(self.backgroundoutput, (0, 0))
+    # Function to reset all values
+    def reset(self):
+        Variables.inputloop = True
+        Variables.numbplayers = 1
+        Variables.inputpart = 1
+        Variables.avataroneimage = ""
+        Variables.avatartwoimage = ""
+        Variables.avatarthreeimage = ""
+        Variables.avatarfourimage = ""
+        self.count = 1
+        self.PlayerName1 = ""
+        self.PlayerName2 = ""
+        self.PlayerName3 = ""
+        self.PlayerName4 = ""
+        self.player = ""
 
-        # If statement for the name input
-        if type == "Name":
-            # Showing the name question
-            self.screen.blit(self.name_block, self.name_rect)
-
-        # If statement for the position input
-        if type == "Place":
-            # Showing the place question
-            self.screen.blit(self.place_block, self.place_rect)
-
-        # Showing the entered answer
-        block = self.font.render(show, 1, (0, 255, 255))
-        rect = block.get_rect(center=(self.screenwidth/2, self.screenheight*0.4))
-        self.screen.blit(block, rect)
-
-        # Flip the screen to show contents
-        pygame.display.flip()
+    # Function to start this menu
+    def start(self):
+        self.reset()
+        self.loop()
 
 
 class Button(object):
@@ -406,6 +447,16 @@ class Button(object):
         elif self.count == 3:
             image = os.path.join("Images", "P4.png")
         elif self.count == 4:
+            image = os.path.join("Images", "P5.png")
+        elif self.count == 5:
+            image = os.path.join("Images", "P6.png")
+        elif self.count == 6:
+            image = os.path.join("Images", "P7.png")
+        elif self.count == 7:
+            image = os.path.join("Images", "P8.png")
+        elif self.count == 8:
+            image = os.path.join("Images", "P9.png")
+        elif self.count == 9:
             image = os.path.join("Images", "P1.png")
 
         # Loading the new image on the button itself
@@ -416,7 +467,7 @@ class Button(object):
         self.surfaceHighlight = pygame.transform.scale(self.origSurfaceNormal, self.size)
 
         # Cycling through images and resetting otherwise
-        if self.count <= 3:
+        if self.count <= 8:
             self.count += 1
         else:
             self.count = 1
@@ -475,7 +526,6 @@ class Button(object):
         # Mouse up is handled whether or not it was over the button
         doMouseClick = False
         if eventObj.type == MOUSEBUTTONUP:
-            Sounds.PlaySound.MouseClick(self)
             if self.lastMouseDownOverButton:
                 doMouseClick = True
             self.lastMouseDownOverButton = False
@@ -484,7 +534,9 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
-                sys.exit()
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
+                Variables.inputloop = False
 
             elif self.buttonDown and (self.type == "Visible" or self.type == "VisibleExit"):
                 self.buttonDown = False
@@ -505,6 +557,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.numbplayers = 1
                 Variables.inputpart = 2
 
@@ -512,6 +566,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.numbplayers = 2
                 Variables.inputpart = 2
 
@@ -519,6 +575,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.numbplayers = 3
                 Variables.inputpart = 2
 
@@ -526,6 +584,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.numbplayers = 4
                 Variables.inputpart = 2
 
@@ -533,6 +593,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 # Function to change the image
                 self.avatarload()
 
@@ -540,6 +602,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 # Function to change the image
                 self.avatarload()
 
@@ -547,6 +611,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 # Function to change the image
                 self.avatarload()
 
@@ -554,6 +620,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 # Function to change the image
                 self.avatarload()
 
@@ -572,3 +640,4 @@ class Button(object):
             retVal.append('exit')
 
         return retVal
+

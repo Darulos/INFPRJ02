@@ -1,3 +1,5 @@
+# Copyright 'We gaan voor een 10', 2017
+
 import pygame, os, random
 
 # always import Sounds when working with this (Use Sound.PlaySound.[Sound you want])

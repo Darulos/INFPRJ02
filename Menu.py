@@ -1,11 +1,15 @@
+# Copyright 'We gaan voor een 10', 2017
+
 import os, sys, pygame
 from pygame.locals import *
 
-
+import Input
 import Variables
-import typen
+import Database
+import Sounds
 
-class Game():
+
+class Game:
     def __init__(self):
         self.running = True
         self.screen = None
@@ -21,8 +25,51 @@ class Game():
         size = (self.width, self.height)
         self.screen = pygame.display.set_mode(size, FULLSCREEN)
 
+        # Setting the highscore menu
+        hiscores = ""
+        self.Score0 = Text(False, hiscores, (0, 0, 0), 960, 200)
+        for i in range(0, 10):
+            hiscores += str(Database.interact_database("SELECT Name FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0])
+            hiscores += "  Wins: "
+            hiscores += str(Database.interact_database("SELECT Wins FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0])
+            hiscores += "  Losses: "
+            hiscores += str(Database.interact_database("SELECT Losses FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0])
+            hiscores += "  W/L: "
+            if 1 > int(Database.interact_database("SELECT Losses FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0]):
+                hiscores += str(int(Database.interact_database("SELECT Wins FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0]))
+            else:
+                print("XD")
+                hiscores += str(round(int(Database.interact_database("SELECT Wins FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0]) / int(Database.interact_database("SELECT Losses FROM Score ORDER BY (Wins / (Losses + 1)) DESC LIMIT 1 OFFSET {};".format(i))[0][0]), 2))
+            if i == 0:
+                self.Score0 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 1:
+                self.Score1 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 2:
+                self.Score2 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 3:
+                self.Score3 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 4:
+                self.Score4 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 5:
+                self.Score5 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 6:
+                self.Score6 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 7:
+                self.Score7 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 8:
+                self.Score8 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            elif i == 9:
+                self.Score9 = Text(False, hiscores, (255, 255, 255), self.width/2, 200 + (50*i))
+            hiscores = ""
+
+        # Plays Title Music
+        Sounds.PlaySound.TitleScreen(self)
+
         # Setting the name of the window
         pygame.display.set_caption('Euromast')
+
+        # Setting up other scenes
+        self.scene = Input.Play(self.screen)
 
         # Setting up buttons in main menu
         button_width = 64*6
@@ -32,13 +79,16 @@ class Game():
         # Creating all the buttons
         self.Menu_button0 = Button((self.width*0.8-(button_width/2)), (self.height*0.30), os.path.join("Images", "Play_Button_Normal.png"), os.path.join("Images", "Play_Button_Pressed.png"), buttonsize, "Play", True)
         self.Menu_button1 = Button((self.width*0.8-(button_width/2)), (self.height*0.45), os.path.join("Images", "Uitleg_Button_Normal.png"), os.path.join("Images", "Uitleg_Button_Pressed.png"), buttonsize, "Visible", True)
-        self.Menu_button2 = Button((self.width*0.8-(button_width/2)), (self.height*0.60), os.path.join("Images", "Exit_Button_Normal.png"), os.path.join("Images", "Exit_Button_Pressed.png"), buttonsize, "Exit", True)
+        self.Menu_button4 = Button((self.width*0.8-(button_width/2)), (self.height*0.60), os.path.join("Images", "Hiscores_Button_Normal.png"), os.path.join("Images", "Hiscores_Button_Pressed.png"), buttonsize, "Score", True)
+        self.Menu_button2 = Button((self.width*0.8-(button_width/2)), (self.height*0.75), os.path.join("Images", "Exit_Button_Normal.png"), os.path.join("Images", "Exit_Button_Pressed.png"), buttonsize, "Exit", True)
         self.Menu_button3 = Button((self.width*0.5-(button_width/2)), (self.height*0.70), os.path.join("Images", "Back_Button_Normal.png"), os.path.join("Images", "Back_Button_Pressed.png"), buttonsize, "VisibleExit", False)
+        self.Menu_button5 = Button((self.width*0.5-(button_width/2)), (self.height*0.70), os.path.join("Images", "Back_Button_Normal.png"), os.path.join("Images", "Back_Button_Pressed.png"), buttonsize, "VisibleSExit", False)
 
         # Setting up various visual elements and text elements
         self.Rules = Image(0, 0, False, "Images", "Rules.png", 1)
         self.Background = Image(0, 0, True, "Images", "Menu_Background.png", 6)
-        self.Title_Animation = Animation((self.width * 0.8 - 300), (self.height * 0.01), "Images", "Title_Animated.png", 6, True, 4, 4, 1)
+        self.Title_Animation = Animation((self.width * 0.8 - 300), (self.height * 0.01), "Images", "Title_Animated.png", 6, True, 10, 4, 1)
+        self.Blank = Image(0, 0, False, "Images", "Blank.png", 1)
 
     def draw(self):
         # Setting the framerate
@@ -51,14 +101,30 @@ class Game():
         # Set the menu text on top
         self.Title_Animation.draw(self.screen)
 
+        # Set the image behind highscores
+        self.Blank.draw(self.screen)
+
+        # Add text of information
+        self.Rules.draw(self.screen)
+        # Add text of scores
+        self.Score0.draw(self.screen)
+        self.Score1.draw(self.screen)
+        self.Score2.draw(self.screen)
+        self.Score3.draw(self.screen)
+        self.Score4.draw(self.screen)
+        self.Score5.draw(self.screen)
+        self.Score6.draw(self.screen)
+        self.Score7.draw(self.screen)
+        self.Score8.draw(self.screen)
+        self.Score9.draw(self.screen)
+
         # Add image of a button
         self.Menu_button0.draw(self.screen)
         self.Menu_button1.draw(self.screen)
         self.Menu_button2.draw(self.screen)
         self.Menu_button3.draw(self.screen)
-
-        # Add text of information
-        self.Rules.draw(self.screen)
+        self.Menu_button4.draw(self.screen)
+        self.Menu_button5.draw(self.screen)
 
         # Flip the screen
         pygame.display.flip()
@@ -69,9 +135,28 @@ class Game():
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
-            #self.Background.draw(self.screen)
+            self.Menu_button4.update()
             self.Rules.update()
             self.Menu_button3.update()
+            self.Title_Animation.update()
+
+        if Variables.function == "Menu_scores":
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.Menu_button4.update()
+            self.Blank.update()
+            self.Score0.update()
+            self.Score1.update()
+            self.Score2.update()
+            self.Score3.update()
+            self.Score4.update()
+            self.Score5.update()
+            self.Score6.update()
+            self.Score7.update()
+            self.Score8.update()
+            self.Score9.update()
+            self.Menu_button5.update()
             self.Title_Animation.update()
 
         # Scene switching to the playing menu
@@ -79,16 +164,34 @@ class Game():
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
+            self.Menu_button4.update()
             self.Title_Animation.update()
-            typen.start()
+            self.Background.update()
+            self.scene.start()
+            self.Background.update()
+            self.Title_Animation.update()
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.Menu_button4.update()
 
         # Scene switching to go back to the main menu from the playing menu
         if Variables.function == "Menu_return":
             self.Menu_button0.update()
             self.Menu_button1.update()
             self.Menu_button2.update()
+            self.Menu_button4.update()
             self.Title_Animation.update()
             Variables.function = "Menu_info"
+
+        if Variables.function == "Menu_s_return":
+            self.Blank.update()
+            self.Menu_button0.update()
+            self.Menu_button1.update()
+            self.Menu_button2.update()
+            self.Menu_button4.update()
+            self.Title_Animation.update()
+            Variables.function = "Menu_scores"
 
     def game_loop(self):
         a = True
@@ -101,7 +204,10 @@ class Game():
                 self.Menu_button1.eventhandler(event)
                 self.Menu_button2.eventhandler(event)
                 self.Menu_button3.eventhandler(event)
+                self.Menu_button4.eventhandler(event)
+                self.Menu_button5.eventhandler(event)
             self.draw()
+
 
 class Image:
     def __init__(self, x, y, check, path, image, scale):
@@ -115,20 +221,24 @@ class Image:
         self._rect = pygame.Rect(x, y, 0, 0)
         self.output2 = pygame.Surface(self._rect.size)
 
+        # Setting the image
+        self.output = pygame.image.load(os.path.join(self.path, self.image))
+        self.width = self.output.get_width()
+        self.height = self.output.get_height()
+        self.size = (int(self.width*self.scale), int(self.height*self.scale))
+        self.output2 = pygame.transform.scale(self.output, self.size)
+        self._rect = pygame.Rect((self._rect.left, self._rect.top, self.output2.get_width(), self.output2.get_height()))
+
     def draw(self, screen):
         if self._visible:
-            self.output = pygame.image.load(os.path.join(self.path, self.image))
-            self.width = self.output.get_width()
-            self.height = self.output.get_height()
-            self.size = (int(self.width*self.scale), int(self.height*self.scale))
-            self.output2 = pygame.transform.scale(self.output, self.size)
-            self._rect = pygame.Rect((self._rect.left, self._rect.top, self.output2.get_width(), self.output2.get_height()))
             screen.blit(self.output2, self._rect)
 
     def update(self):
         self._visible = not self._visible
 
+
 class Text:
+    pygame.init()
     def __init__(self, check, text, color, width, height):
         self._visible = check
         self.font_menu = pygame.font.SysFont("consolas", 48)
@@ -137,15 +247,18 @@ class Text:
         self.width = width
         self.height = height
 
+        # Setting the text
+        self.score_text = self.font_menu.render(self.text, 1, self.color)
+        self.score_text_rect = self.score_text.get_rect(center=(self.width, self.height))
+
     def draw(self, screen):
         if self._visible:
-            score_text = self.font_menu.render(self.text, 1, self.color)
-            score_text_rect = score_text.get_rect(center=(self.width, self.height))
-            screen.blit(score_text, score_text_rect)
+            screen.blit(self.score_text, self.score_text_rect)
 
     def update(self):
         if Variables.init == 1:
             self._visible = not self._visible
+
 
 class Animation:
     def __init__(self, x, y, path, image, scale, visible, framerate, horizontal, vertical):
@@ -163,26 +276,26 @@ class Animation:
         self.horizontal = horizontal
         self.vertical = vertical
 
+        # Loading image and scaling it
+        self.mainsheet = pygame.image.load(os.path.join(self.path, self.image))
+        self.size = (int(pygame.Surface.get_width(self.mainsheet)*self.scale), int(pygame.Surface.get_height(self.mainsheet)*self.scale))
+        self.output = pygame.transform.scale(self.mainsheet, self.size)
+        self._rect = pygame.Rect((self._rect.left, self._rect.top, self.output.get_width(), self.output.get_height()))
+
+        # Setting the cell sizes for the animation
+        self.sheet_size = (self.output.get_width(),self.output.get_height())
+        self.horiz_cell = self.horizontal
+        self.vert_cells = self.vertical
+        self.cell_width = int(self.sheet_size[0] / self.horiz_cell)
+        self.cell_height = int(self.sheet_size[1] / self.vert_cells)
+
     def draw(self, screen):
         if self._visible:
-            # Loading image and scaling it
-            mainsheet = pygame.image.load(os.path.join(self.path, self.image))
-            size = (int(pygame.Surface.get_width(mainsheet)*self.scale), int(pygame.Surface.get_height(mainsheet)*self.scale))
-            output = pygame.transform.scale(mainsheet, size)
-            self._rect = pygame.Rect((self._rect.left, self._rect.top, output.get_width(), output.get_height()))
-
-            # Setting the cell sizes for the animation
-            sheet_size = (output.get_width(),output.get_height())
-            horiz_cell = self.horizontal
-            vert_cells = self.vertical
-            cell_width = int(sheet_size[0] / horiz_cell)
-            cell_height = int(sheet_size[1] / vert_cells)
-
             # Loop of the animation
-            for y in range (0, sheet_size[1], cell_height):
-                for x in range (0, sheet_size[0], cell_width):
-                    surface = pygame.Surface((cell_width, cell_height), SRCALPHA)
-                    surface.blit(output, (0,0), (x, y, cell_width, cell_height))
+            for y in range (0, self.sheet_size[1], self.cell_height):
+                for x in range (0, self.sheet_size[0], self.cell_width):
+                    surface = pygame.Surface((self.cell_width, self.cell_height), SRCALPHA)
+                    surface.blit(self.output, (0,0), (x, y, self.cell_width, self.cell_height))
                     self.cell_list.append(surface)
 
             # Set the timed divided value to adjust animation speed
@@ -200,6 +313,7 @@ class Animation:
     def update(self):
         if Variables.init == 1:
             self._visible = not self._visible
+
 
 class Button(object):
     def __init__(self, x, y, normal, down, screensize, type, check, highlight=None):
@@ -224,25 +338,25 @@ class Button(object):
         self.down = down
         self.highlight = highlight
 
+        # Error prevention
+        if self.down is None:
+            self.down = self.normal
+        if self.highlight is None:
+            self.highlight = self.normal
+
+        # Setting the textures of the button
+        self.origSurfaceNormal = pygame.image.load(self.normal)
+        self.origSurfaceDown = pygame.image.load(self.down)
+        self.origSurfaceHighlight = pygame.image.load(self.highlight)
+
+        # Scale the buttons to the appropiate size
+        self.surfaceNormal = pygame.transform.scale(self.origSurfaceNormal, self.size)
+        self.surfaceDown = pygame.transform.scale(self.origSurfaceDown, self.size)
+        self.surfaceHighlight = pygame.transform.scale(self.origSurfaceHighlight, self.size)
+        self._rect = pygame.Rect((self._rect.left, self._rect.top, self.surfaceNormal.get_width(), self.surfaceNormal.get_height()))
+
     def draw(self, surfaceObj):
         if self._visible:
-            # Error prevention
-            if self.down is None:
-                self.down = self.normal
-            if self.highlight is None:
-                self.highlight = self.normal
-
-            # Setting the textures of the button
-            self.origSurfaceNormal = pygame.image.load(self.normal)
-            self.origSurfaceDown = pygame.image.load(self.down)
-            self.origSurfaceHighlight = pygame.image.load(self.highlight)
-
-            # Scale the buttons to the appropiate size
-            self.surfaceNormal = pygame.transform.scale(self.origSurfaceNormal, self.size)
-            self.surfaceDown = pygame.transform.scale(self.origSurfaceDown, self.size)
-            self.surfaceHighlight = pygame.transform.scale(self.origSurfaceHighlight, self.size)
-            self._rect = pygame.Rect((self._rect.left, self._rect.top, self.surfaceNormal.get_width(), self.surfaceNormal.get_height()))
-
             # Blit the buttons to the surface
             if self.buttonDown:
                 surfaceObj.blit(self.surfaceDown, self._rect)
@@ -324,6 +438,8 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.function = "Menu_info"
                 self._propSetVisible()
 
@@ -331,7 +447,18 @@ class Button(object):
                 self.buttonDown = False
                 self.mouseUp(eventObj)
                 retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
                 Variables.function = "Play"
+                self._propSetVisible()
+
+            elif self.buttonDown and (self.type == "Score" or self.type == "VisibleSExit"):
+                self.buttonDown = False
+                self.mouseUp(eventObj)
+                retVal.append('up')
+                #Plays Click sound upon releasing
+                Sounds.PlaySound.MouseClick(self)
+                Variables.function = "Menu_scores"
                 self._propSetVisible()
 
             elif self.buttonDown:
@@ -349,6 +476,7 @@ class Button(object):
             retVal.append('exit')
 
         return retVal
+
 
 def program():
     Variables.game = Game()
